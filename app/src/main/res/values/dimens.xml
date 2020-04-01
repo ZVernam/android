@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="default_elevation">4pt</dimen>
+    <dimen name="default_margin_small">8dp</dimen>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="header_size">48sp</dimen>
+    <dimen name="default_margin">8dp</dimen>
+</resources>

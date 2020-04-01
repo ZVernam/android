@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Vernam</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="item_title">Hello, Vernam Cipher!</string>
+    <string name="item_description">Vernam Cipher Initial Application Screen</string>
+</resources>
