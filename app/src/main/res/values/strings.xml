@@ -2,6 +2,8 @@
     <string name="app_name">Vernam</string>
     <string name="action_settings">Settings</string>
 
-    <string name="item_title">Hello, Vernam Cipher!</string>
-    <string name="item_description">Vernam Cipher Initial Application Screen</string>
+    <string name="app_title">Vernam Cipher</string>
+    <string name="app_input_plaintext">Plain Text</string>
+    <string name="app_input_secret">Secret</string>
+    <string name="app_input_cipher">Cipher</string>
 </resources>

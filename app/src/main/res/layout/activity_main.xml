@@ -43,19 +43,43 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/item_title"
+                android:fontFamily="monospace"
+                android:text="@string/app_title"
                 android:textAppearance="@android:style/TextAppearance.Material.Headline"
-                android:textSize="@dimen/header_size" />
+                android:textSize="@dimen/header_size"
+                android:typeface="monospace"
+                android:textAlignment="center"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+
+            <EditText
+                android:id="@+id/plainText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
-                android:text="@string/item_description"
-                android:textAppearance="@android:style/TextAppearance.Material.Body1"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:ems="10"
+                android:inputType="text"
+                android:hint="@string/app_input_plaintext"
+                android:autofillHints="emailAddress, url" />
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:ems="10"
+                android:inputType="textVisiblePassword"
+                android:hint="@string/app_input_secret"
+                android:importantForAutofill="no" />
+            <EditText
+                android:id="@+id/cipher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:ems="10"
+                android:inputType="text"
+                android:hint="@string/app_input_cipher"
+                android:importantForAutofill="no" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
