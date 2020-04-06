@@ -1,9 +1,14 @@
 package com.github.zeckson.vernam
 
+import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
@@ -16,10 +21,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        val toast = Toast.makeText(
+            applicationContext,
+            "Text Copied To Clipboard",
+            Toast.LENGTH_SHORT
+        )
 
         when (intent?.action) {
-            Intent.ACTION_SEND -> intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                plainText.setText(it)
+            Intent.ACTION_SEND -> {
+                val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+                if (text != null) {
+                    plainText.setText(text)
+                    val clipboard: ClipboardManager =
+                        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    clipboard.setPrimaryClip(ClipData.newPlainText("Text copied!", text))
+                    toast.show()
+                    val intent = Intent()
+                    intent.putExtra("text", text)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+
             }
         }
 
