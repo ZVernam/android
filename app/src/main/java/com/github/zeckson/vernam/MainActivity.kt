@@ -39,13 +39,15 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent()
                     intent.putExtra("text", text)
                     setResult(Activity.RESULT_OK, intent)
-                    finish()
+                    // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
+                    return finish()
                 }
 
             }
         }
 
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -62,4 +64,5 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 }
