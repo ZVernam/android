@@ -4,7 +4,8 @@ import java.util.*
 
 fun stripUrlToHost(url: String): String {
     var result = url.toLowerCase(Locale.ENGLISH)
-    val scheme = result.indexOf("//")
+    // remove invalid scheme like "fun////"
+    val scheme = result.lastIndexOf("//")
     if (scheme >= 0) {
         result = result.substring(scheme + 2, result.length)
     }
