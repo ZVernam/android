@@ -1,10 +1,5 @@
 package com.github.zeckson.vernam
 
-import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -27,23 +22,13 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         )
 
-        when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-                if (text != null) {
-                    plainText.setText(text)
-                    val clipboard: ClipboardManager =
-                        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    clipboard.setPrimaryClip(ClipData.newPlainText("Text copied!", text))
-                    toast.show()
-                    val intent = Intent()
-                    intent.putExtra("text", text)
-                    setResult(Activity.RESULT_OK, intent)
-                    // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
-                    return finish()
-                }
-
-            }
+        intent.getHost().let {
+            plainText.setText(it)
+            this.setTextToClipBoard(it)
+            toast.show()
+            setResultText(it)
+            // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
+            return finish()
         }
 
     }
