@@ -13,7 +13,7 @@ class PasteToClipboardActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         )
 
-        intent.getHost().let {
+        intent.getHost()?.let {
             toast.show()
             setTextToClipBoard(it)
             setResultText(it)

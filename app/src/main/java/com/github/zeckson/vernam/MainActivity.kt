@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         )
 
-        intent.getHost().let {
+        intent.getHost()?.let {
             plainText.setText(it)
             this.setTextToClipBoard(it)
             toast.show()
