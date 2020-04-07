@@ -4,4 +4,7 @@
     <dimen name="default_padding">16dp</dimen>
     <dimen name="header_size">42sp</dimen>
     <dimen name="default_margin">8dp</dimen>
+
+    <integer name="default_input_wide">10</integer>
+
 </resources>
