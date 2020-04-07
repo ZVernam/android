@@ -21,17 +21,24 @@ class UrlUtilsKtTest {
     }
 
     @Test
-    fun cornerCases() {
-        // Invlaid scheme
-        expectStrip("fun/////daskjldkjsal", "daskjldkjsal")
-    }
-
-    @Test
     fun stripPort() {
         expectStrip("vk.com:8080", "vk.com")
         expectStrip("zeckson.inline:9999/wtf?###easy", "zeckson.inline")
         expectStrip("https://test.site.my:4043/path", "test.site.my")
     }
+
+    @Test
+    fun stripWWW() {
+        expectStrip("www.vk.com:8080", "vk.com")
+        expectStrip("wwww.easypeasy.com", "wwww.easypeasy.com")
+    }
+
+    @Test
+    fun cornerCases() {
+        // Invlaid scheme
+        expectStrip("fun/////daskjldkjsal", "daskjldkjsal")
+    }
+
 
     @Test
     fun nothingToStrip() {
