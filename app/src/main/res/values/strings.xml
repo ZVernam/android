@@ -6,4 +6,8 @@
     <string name="app_input_plaintext">Plain Text</string>
     <string name="app_input_secret">Secret</string>
     <string name="app_input_cipher">Cipher</string>
+
+    //Preferences
+    <string name="preference_token">Token</string>
+    <string name="preference_is_hashed">Hash Enabled</string>
 </resources>
