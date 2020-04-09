@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 
 fun Intent?.getHost(): String? {
     when (this?.action) {
@@ -25,6 +26,10 @@ fun Activity.setResultText(it: String?) {
     val intent = Intent()
     intent.putExtra("text", it)
     setResult(Activity.RESULT_OK, intent)
+}
+
+fun Activity.showToast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
 
 

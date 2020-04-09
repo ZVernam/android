@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
@@ -17,16 +16,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        val toast = Toast.makeText(
-            applicationContext,
-            "Text Copied To Clipboard",
-            Toast.LENGTH_SHORT
-        )
 
         intent.getHost()?.let {
             plainText.setText(it)
             this.setTextToClipBoard(it)
-            toast.show()
+            showToast("Text Copied To Clipboard")
             setResultText(it)
             // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
             return finish()

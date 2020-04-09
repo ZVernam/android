@@ -1,20 +1,28 @@
 package com.github.zeckson.vernam
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 
 class PasteToClipboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val toast = Toast.makeText(
-            applicationContext,
-            "Text Copied To Clipboard",
-            Toast.LENGTH_SHORT
-        )
+        when (BiometricManager.from(application).canAuthenticate()) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                // TODO: on can auth
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                showToast(getString(R.string.setup_lock_screen))
+            }
+            else -> {
+                showToast(getString(R.string.biometric_is_not_supported))
+            }
+        }
+
+        val text = "Text Copied To Clipboard"
 
         intent.getHost()?.let {
-            toast.show()
+            showToast(text)
             setTextToClipBoard(it)
             setResultText(it)
         }
@@ -22,5 +30,6 @@ class PasteToClipboardActivity : AppCompatActivity() {
         finish()
         return
     }
+
 
 }
