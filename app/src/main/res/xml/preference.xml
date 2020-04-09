@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
         android:key="@string/preference_is_hashed"
-        android:title="Hash input value"/>
+        android:title="Hash input value"
+        app:iconSpaceReserved="false" />
 
-    <EditTextPreference
-        android:key="@string/preference_token"
-        android:title="Default token"
-        android:summary="User provided token"/>
+    <PreferenceCategory
+        android:title="Security"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            android:key="@string/preference_token"
+            android:title="Default token"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:key="@string/preference_password"
+            android:summary="Set default password if necessary"
+            android:title="Default password"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="false" />
+
+        <SwitchPreferenceCompat
+            android:key="@string/preference_is_biometric"
+            android:title="Use biometric auth"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

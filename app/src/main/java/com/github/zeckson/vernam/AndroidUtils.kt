@@ -38,7 +38,7 @@ fun Activity.showToast(text: String) {
 private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 private const val PREFERENCE_KEY = "com.github.zeckson.user_secret_preferences"
 
-fun Application.getEncryptedPreferences() = EncryptedSharedPreferences.create(
+fun Context.getEncryptedPreferences() = EncryptedSharedPreferences.create(
     PREFERENCE_KEY,
     masterKeyAlias,
     this,
