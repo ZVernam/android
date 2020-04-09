@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        passwordText.setText(getEncryptedPreferences().getString(getString(R.string.preference_password), ""))
+
         setupTextListeners()
 
         intent.getHost()?.let {
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupTextListeners() {
         val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) = updateSecret()
+            override fun afterTextChanged(p0: Editable?) = updateTextValues()
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // do nothing
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         passwordText.addTextChangedListener(textWatcher)
     }
 
-    private fun updateSecret() {
+    private fun updateTextValues() {
         val token = sharedPreferences.getString(getString(R.string.preference_token), "")
         val plainText = plainText.text.toString() + token
         val password = passwordText.text.toString()
