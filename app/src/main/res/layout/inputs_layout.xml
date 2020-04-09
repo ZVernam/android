@@ -25,7 +25,7 @@
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password"
+            android:id="@+id/passwordText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"
@@ -42,7 +42,7 @@
         android:paddingVertical="@dimen/default_padding">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/cipher"
+            android:id="@+id/cipherText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"
