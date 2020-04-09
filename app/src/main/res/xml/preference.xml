@@ -9,6 +9,15 @@
         android:title="Hash input value"
         app:iconSpaceReserved="false" />
 
+    <SeekBarPreference
+        android:defaultValue="15"
+        android:key="@string/preference_max_size"
+        android:max="20"
+        android:title="Generated password max size"
+        app:adjustable="true"
+        app:showSeekBarValue="true"
+        app:iconSpaceReserved="false"/>
+
     <PreferenceCategory
         android:title="Security"
         app:iconSpaceReserved="false">

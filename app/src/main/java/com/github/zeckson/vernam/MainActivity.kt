@@ -24,7 +24,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        passwordText.setText(getEncryptedPreferences().getString(getString(R.string.preference_password), ""))
+        passwordText.setText(
+            getEncryptedPreferences().getString(
+                getString(R.string.preference_password),
+                ""
+            )
+        )
 
         setupTextListeners()
 
@@ -61,7 +66,9 @@ class MainActivity : AppCompatActivity() {
         val plainText = plainText.text.toString() + token
         val password = passwordText.text.toString()
         val isHashed = sharedPreferences.getBoolean(getString(R.string.preference_is_hashed), false)
-        cipherText.setText(encrypt(if (isHashed) hash(plainText) else plainText, hash(password)))
+        val generated = encrypt(if (isHashed) hash(plainText) else plainText, hash(password))
+        val maxSize = sharedPreferences.getInt(getString(R.string.preference_max_size), 15)
+        cipherText.setText(generated.take(maxSize))
     }
 
 

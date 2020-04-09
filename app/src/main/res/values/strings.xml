@@ -7,11 +7,6 @@
     <string name="app_input_secret">Secret</string>
     <string name="app_input_cipher">Cipher</string>
 
-    //Preferences
-    <string name="preference_token">Token</string>
-    <string name="preference_password">Password</string>
-    <string name="preference_is_hashed">Hash input</string>
-    <string name="preference_is_biometric">Use biometric</string>
     <string name="setup_lock_screen">
         Secure lock screen hasn\'t set been up.\n
         Go to \'Settings -> Security -> Fingerprint\' to set up a fingerprint or face
@@ -19,5 +14,12 @@
     <string name="biometric_is_not_supported">
         Looks like biometrics is not supported or disabled on your device
     </string>
+
+    //Preferences
+    <string name="preference_token">Token</string>
+    <string name="preference_password">Password</string>
+    <string name="preference_is_hashed">Hash input</string>
+    <string name="preference_is_biometric">Use biometric</string>
+    <string name="preference_max_size">Password max size</string>
 
 </resources>
