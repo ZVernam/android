@@ -59,6 +59,14 @@
 
                 <include layout="@layout/inputs_layout" />
 
+                <ImageButton
+                    android:id="@+id/copyToClipboard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/copy_to_clipboard_button"
+                    android:src="@drawable/lock" />
+
             </LinearLayout>
 
         </ScrollView>

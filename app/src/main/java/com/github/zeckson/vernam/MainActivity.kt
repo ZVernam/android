@@ -24,24 +24,27 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        intent.getHost()?.let { plainText.setText(it) }
         passwordText.setText(
             getEncryptedPreferences().getString(
                 getString(R.string.preference_password),
                 ""
             )
         )
+        updateTextValues()
 
         setupTextListeners()
 
-        intent.getHost()?.let {
-            plainText.setText(it)
-            this.setTextToClipBoard(it)
-            showToast("Text Copied To Clipboard")
-            setResultText(it)
-            // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
-            return finish()
-        }
+        copyToClipboard.setOnClickListener {
+            val text = cipherText.text.toString()
+            if (text.isEmpty()) return@setOnClickListener
 
+            this.setTextToClipBoard(text)
+            showToast("Text Copied To Clipboard")
+            setResultText(text)
+            // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
+            finish()
+        }
     }
 
     private fun setupTextListeners() {
@@ -62,11 +65,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateTextValues() {
+
+        val plainText = plainText.text.toString()
+        if (plainText.isEmpty()) {
+            cipherText.setText("")
+            return
+        }
+
         val token = sharedPreferences.getString(getString(R.string.preference_token), "")
-        val plainText = plainText.text.toString() + token
+        val textWithToken = plainText + token
+
         val password = passwordText.text.toString()
+        if (password.isEmpty()) {
+            cipherText.setText("")
+            return
+        }
+
         val isHashed = sharedPreferences.getBoolean(getString(R.string.preference_is_hashed), false)
-        val generated = encrypt(if (isHashed) hash(plainText) else plainText, hash(password))
+        val generated =
+            encrypt(if (isHashed) hash(textWithToken) else textWithToken, hash(password))
         val maxSize = sharedPreferences.getInt(getString(R.string.preference_max_size), 15)
         cipherText.setText(generated.take(maxSize))
     }
