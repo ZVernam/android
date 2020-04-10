@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
@@ -45,7 +48,54 @@ class MainActivity : AppCompatActivity() {
             // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
             finish()
         }
+
+        if (sharedPreferences.getBoolean(getString(R.string.preference_is_biometric), false)) {
+            promptBiometric(createPromptInfo(), createBiometricPrompt())
+        }
     }
+
+    private fun createPromptInfo(): BiometricPrompt.PromptInfo {
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(getString(R.string.prompt_info_title))
+            .setSubtitle(getString(R.string.prompt_info_subtitle))
+            .setDescription(getString(R.string.prompt_info_description))
+            .setConfirmationRequired(false)
+            //.setNegativeButtonText(getString(R.string.prompt_info_use_app_password))
+            .setDeviceCredentialAllowed(true) // Allow PIN/pattern/password authentication.
+            // Also note that setDeviceCredentialAllowed and setNegativeButtonText are
+            // incompatible so that if you uncomment one you must comment out the other
+            .build()
+        return promptInfo
+    }
+
+
+    private fun createBiometricPrompt(): BiometricPrompt {
+        val executor = ContextCompat.getMainExecutor(this)
+
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Log.d(TAG, "$errorCode :: $errString")
+                if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                    finish()
+                }
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Log.d(TAG, "Authentication failed for an unknown reason")
+                finish()
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                Log.d(TAG, "Authentication was successful")
+            }
+        }
+
+        return BiometricPrompt(this, executor, callback)
+    }
+
 
     private fun setupTextListeners() {
         val textWatcher = object : TextWatcher {
