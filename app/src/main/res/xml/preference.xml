@@ -23,7 +23,7 @@
         app:iconSpaceReserved="false">
 
         <EditTextPreference
-            android:key="@string/preference_token"
+            android:key="@string/preference_suffix"
             android:title="Default token"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />

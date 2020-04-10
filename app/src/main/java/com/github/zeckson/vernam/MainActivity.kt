@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val token = sharedPreferences.getString(getString(R.string.preference_token), "")
+        val token = getEncryptedPreferences().getString(getString(R.string.preference_suffix), "")
         val textWithToken = plainText + token
 
         val password = passwordText.text.toString()

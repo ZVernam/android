@@ -7,6 +7,7 @@ import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceDataStore
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 
@@ -21,16 +22,36 @@ class SettingsActivity : AppCompatActivity() {
 
     class SettingsFragment() : PreferenceFragmentCompat() {
         private lateinit var encrptedPreference: SharedPreferences
+        private val encryptedDataStore = object : PreferenceDataStore() {
+
+            override fun getString(key: String?, defValue: String?): String? {
+                return encrptedPreference.getString(key, defValue)
+            }
+
+            override fun putString(key: String?, value: String?) {
+                encrptedPreference.edit().putString(key, value).apply()
+            }
+
+        }
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preference, rootKey)
+
             val context = context
             if (context != null) {
                 encrptedPreference = context.getEncryptedPreferences()
-                setupPassword()
 
+                setupSuffix()
+                setupPassword()
                 setupBiometric(context)
             }
 
+        }
+
+        private fun setupSuffix() {
+            val suffixPreference =
+                findPreference<EditTextPreference>(getString(R.string.preference_suffix))
+            suffixPreference?.preferenceDataStore = encryptedDataStore
         }
 
         private fun setupBiometric(context: Context) {
@@ -49,14 +70,10 @@ class SettingsActivity : AppCompatActivity() {
         private fun setupPassword() {
             val passwordPreference =
                 findPreference<EditTextPreference>(getString(R.string.preference_password))
+
+            passwordPreference?.preferenceDataStore = encryptedDataStore
             passwordPreference?.setOnBindEditTextListener {
                 it.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            passwordPreference?.setOnPreferenceChangeListener { preference, newValue ->
-                encrptedPreference.edit().putString(
-                    getString(R.string.preference_password),
-                    newValue as String?
-                ).commit()
             }
         }
     }

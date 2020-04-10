@@ -17,7 +17,7 @@
     <string name="copy_to_clipboard_button">Copy to clipboard</string>
 
     //Preferences
-    <string name="preference_token">Token</string>
+    <string name="preference_suffix">Suffix</string>
     <string name="preference_password">Password</string>
     <string name="preference_is_hashed">Hash input</string>
     <string name="preference_is_biometric">Use biometric</string>
