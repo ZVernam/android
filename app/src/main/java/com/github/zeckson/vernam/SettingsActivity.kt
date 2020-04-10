@@ -18,38 +18,15 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment() : PreferenceFragmentCompat() {
-        private lateinit var encryptedPreference: SharedPreferences
-
-        private val encryptedDataStore = object : PreferenceDataStore() {
-
-            override fun getString(key: String?, defValue: String?): String? {
-                return encryptedPreference.getString(key, defValue)
-            }
-
-            override fun putString(key: String?, value: String?) {
-                encryptedPreference.edit().putString(key, value).apply()
-            }
-
-        }
-
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preference, rootKey)
 
             val context = context
             if (context != null) {
-                encryptedPreference = context.getEncryptedPreferences()
-
-                setupSuffix()
                 setupPassword()
                 setupBiometric(context)
             }
 
-        }
-
-        private fun setupSuffix() {
-            val suffixPreference =
-                findPreference<EditTextPreference>(getString(R.string.preference_suffix))
-            suffixPreference?.preferenceDataStore = encryptedDataStore
         }
 
         private fun setupBiometric(context: Context) {
@@ -69,7 +46,6 @@ class SettingsActivity : AppCompatActivity() {
             val passwordPreference =
                 findPreference<EditTextPreference>(getString(R.string.preference_password))
 
-            passwordPreference?.preferenceDataStore = encryptedDataStore
             passwordPreference?.summaryProvider = Preference.SummaryProvider<EditTextPreference> {
                 if (it.text.isEmpty()) "Not set" else "Password is set"
             }

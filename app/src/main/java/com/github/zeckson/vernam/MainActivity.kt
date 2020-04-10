@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         intent.getHost()?.let { plainText.setText(it) }
         passwordText.setText(
-            getEncryptedPreferences().getString(
+            sharedPreferences.getString(
                 getString(R.string.preference_password),
                 ""
             )
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val token = getEncryptedPreferences().getString(getString(R.string.preference_suffix), "")
+        val token = sharedPreferences.getString(getString(R.string.preference_suffix), "")
         val textWithToken = plainText + token
 
         val password = passwordText.text.toString()
