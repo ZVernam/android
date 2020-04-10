@@ -1,12 +1,14 @@
 package com.github.zeckson.vernam
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
-import androidx.preference.*
+import androidx.preference.EditTextPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -47,7 +49,7 @@ class SettingsActivity : AppCompatActivity() {
                 findPreference<EditTextPreference>(getString(R.string.preference_password))
 
             passwordPreference?.summaryProvider = Preference.SummaryProvider<EditTextPreference> {
-                if (it.text.isEmpty()) "Not set" else "Password is set"
+                if (it.text == null || it.text.isEmpty()) "Not set" else "Password is set"
             }
             passwordPreference?.setOnBindEditTextListener {
                 it.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
