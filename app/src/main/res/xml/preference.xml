@@ -24,14 +24,14 @@
 
         <EditTextPreference
             android:key="@string/preference_suffix"
-            android:title="Default token"
+            android:title="Default suffix"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:key="@string/preference_password"
-            android:summary="Set default password if necessary"
             android:title="Default password"
+            android:summary="Set default password if necessary"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="false" />
 

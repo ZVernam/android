@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
-import androidx.preference.EditTextPreference
-import androidx.preference.PreferenceDataStore
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -21,15 +18,16 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment() : PreferenceFragmentCompat() {
-        private lateinit var encrptedPreference: SharedPreferences
+        private lateinit var encryptedPreference: SharedPreferences
+
         private val encryptedDataStore = object : PreferenceDataStore() {
 
             override fun getString(key: String?, defValue: String?): String? {
-                return encrptedPreference.getString(key, defValue)
+                return encryptedPreference.getString(key, defValue)
             }
 
             override fun putString(key: String?, value: String?) {
-                encrptedPreference.edit().putString(key, value).apply()
+                encryptedPreference.edit().putString(key, value).apply()
             }
 
         }
@@ -39,7 +37,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val context = context
             if (context != null) {
-                encrptedPreference = context.getEncryptedPreferences()
+                encryptedPreference = context.getEncryptedPreferences()
 
                 setupSuffix()
                 setupPassword()
@@ -72,6 +70,9 @@ class SettingsActivity : AppCompatActivity() {
                 findPreference<EditTextPreference>(getString(R.string.preference_password))
 
             passwordPreference?.preferenceDataStore = encryptedDataStore
+            passwordPreference?.summaryProvider = Preference.SummaryProvider<EditTextPreference> {
+                if (it.text.isEmpty()) "Not set" else "Password is set"
+            }
             passwordPreference?.setOnBindEditTextListener {
                 it.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
