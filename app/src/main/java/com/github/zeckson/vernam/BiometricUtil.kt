@@ -86,8 +86,8 @@ private fun setupKeyStore(): KeyStore {
  * reset after key generation, or if a fingerprint was enrolled after key generation.
  */
 private fun initCipher(cipher: Cipher): Boolean {
+    val keyStore = setupKeyStore()
     try {
-        val keyStore = setupKeyStore();
         cipher.init(
             Cipher.ENCRYPT_MODE,
             keyStore.getKey(DEFAULT_KEY_NAME, null) as SecretKey
