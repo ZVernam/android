@@ -8,3 +8,4 @@ Android App for password generation
 -- https://medium.com/androiddevelopers/migrating-from-fingerprintmanager-to-biometricprompt-4bc5f570dccd
 -- https://gist.github.com/Tanapruk/1154011542739c223c0cf59997867b15
 -- https://developer.android.com/reference/android/app/KeyguardManager#createConfirmDeviceCredentialIntent(java.lang.CharSequence,%20java.lang.CharSequence)
+-- https://developer.android.com/training/sign-in/biometric-auth
