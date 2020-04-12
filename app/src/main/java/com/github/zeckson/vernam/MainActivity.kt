@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
-        if (sharedPreferences.getBoolean(getString(R.string.preference_is_biometric), false)) {
-            promptBiometric(createPromptInfo(), createBiometricPrompt())
-        }
+//        if (sharedPreferences.getBoolean(getString(R.string.preference_is_biometric), false)) {
+//            promptBiometric(createPromptInfo(), createBiometricPrompt())
+//        }
     }
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo {
