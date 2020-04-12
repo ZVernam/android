@@ -1,14 +1,15 @@
 package com.github.zeckson.vernam
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.InputType
+import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
-import androidx.preference.EditTextPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
+import java.security.KeyStoreException
+import javax.crypto.NoSuchPaddingException
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -19,12 +20,16 @@ class SettingsActivity : AppCompatActivity() {
             .commit()
     }
 
-    class SettingsFragment() : PreferenceFragmentCompat() {
+    class SettingsFragment : PreferenceFragmentCompat() {
+
+        lateinit var defaultPreference: SharedPreferences
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preference, rootKey)
 
             val context = context
             if (context != null) {
+                defaultPreference = PreferenceManager.getDefaultSharedPreferences(context)
+
                 setupPassword()
                 setupBiometric(context)
             }
@@ -47,6 +52,38 @@ class SettingsActivity : AppCompatActivity() {
         private fun setupPassword() {
             val passwordPreference =
                 findPreference<EditTextPreference>(getString(R.string.preference_password))
+
+            passwordPreference?.setOnPreferenceChangeListener { _, newValue ->
+
+                val defaultCipher = getDefaultCipher()
+                if (defaultCipher.isValid()) {
+
+                    val value = newValue as String
+                    try {
+                        val result = defaultCipher.doFinal(value.toByteArray())
+                        val b64 = Base64.encodeToString(result, Base64.DEFAULT)
+                        val existing =
+                            defaultPreference.getString(
+                                getString(R.string.preference_password),
+                                ""
+                            )
+                        if (existing != b64) {
+                            defaultPreference.edit()
+                                .putString(getString(R.string.preference_password), b64)
+                                .apply()
+                        }
+                    } catch (e: RuntimeException) {
+                        when (e) {
+                            is KeyStoreException,
+                            is NoSuchPaddingException ->
+                                throw RuntimeException("Failed to encrypt value", e)
+                            else -> throw e
+                        }
+                    }
+
+                }
+                false
+            }
 
             passwordPreference?.summaryProvider = Preference.SummaryProvider<EditTextPreference> {
                 if (it.text == null || it.text.isEmpty()) "Not set" else "Password is set"
