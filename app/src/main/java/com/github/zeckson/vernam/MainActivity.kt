@@ -16,7 +16,10 @@ import kotlinx.android.synthetic.main.inputs_layout.*
 
 
 class MainActivity : AppCompatActivity() {
-    private val TAG = "MyActivity"
+    companion object {
+        private const val TAG = "MyActivity"
+    }
+
     private val sharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(this)
     }
@@ -28,12 +31,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         intent.getHost()?.let { plainText.setText(it) }
-        passwordText.setText(
-            sharedPreferences.getString(
-                getString(R.string.preference_password),
-                ""
-            )
-        )
         updateTextValues()
 
         setupTextListeners()
@@ -48,10 +45,13 @@ class MainActivity : AppCompatActivity() {
             // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
             finish()
         }
+    }
 
-//        if (sharedPreferences.getBoolean(getString(R.string.preference_is_biometric), false)) {
-//            promptBiometric(createPromptInfo(), createBiometricPrompt())
-//        }
+    override fun onStart() {
+        super.onStart()
+        if (sharedPreferences.getBoolean(getString(R.string.preference_is_biometric), false)) {
+            promptBiometric(createPromptInfo(), createBiometricPrompt())
+        }
     }
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo {
@@ -60,8 +60,8 @@ class MainActivity : AppCompatActivity() {
             .setSubtitle(getString(R.string.prompt_info_subtitle))
             .setDescription(getString(R.string.prompt_info_description))
             .setConfirmationRequired(false)
-            //.setNegativeButtonText(getString(R.string.prompt_info_use_app_password))
-            .setDeviceCredentialAllowed(true) // Allow PIN/pattern/password authentication.
+            .setNegativeButtonText(getString(R.string.do_not_use_password))
+            //.setDeviceCredentialAllowed(true) // Allow PIN/pattern/password authentication.
             // Also note that setDeviceCredentialAllowed and setNegativeButtonText are
             // incompatible so that if you uncomment one you must comment out the other
             .build()
@@ -76,20 +76,23 @@ class MainActivity : AppCompatActivity() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
                 Log.d(TAG, "$errorCode :: $errString")
-                if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
-                    finish()
-                }
             }
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
                 Log.d(TAG, "Authentication failed for an unknown reason")
-                finish()
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 Log.d(TAG, "Authentication was successful")
+                passwordText.setText(
+                    sharedPreferences.getString(
+                        getString(R.string.preference_password),
+                        ""
+                    )
+                )
+                updateTextValues()
             }
         }
 

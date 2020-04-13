@@ -24,9 +24,9 @@
     <string name="preference_max_size">Password max size</string>
 
     // Biometric prompt
-    <string name="prompt_info_title">My App\'s Authentication</string>
-    <string name="prompt_info_subtitle">Please login to get access</string>
-    <string name="prompt_info_description">My App is using Android biometric authentication</string>
-    <string name="prompt_info_use_app_password">Use app password</string>
+    <string name="prompt_info_title">Use default password</string>
+    <string name="prompt_info_subtitle">Use your finger to set default password</string>
+    <string name="prompt_info_description">Your password is secured by biometric authentication</string>
+    <string name="do_not_use_password">Enter password manually</string>
 
 </resources>
