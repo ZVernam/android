@@ -35,6 +35,13 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="false" />
 
+        <com.github.zeckson.vernam.BiometricEditTextPreference
+            android:key="somekey"
+            android:title="Default password"
+            android:summary="Set default password if necessary"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="false" />
+
         <SwitchPreferenceCompat
             android:key="@string/preference_is_biometric"
             android:title="Use biometric auth"

@@ -11,7 +11,8 @@ import androidx.preference.*
 import java.security.KeyStoreException
 import javax.crypto.NoSuchPaddingException
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(),
+    PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +20,27 @@ class SettingsActivity : AppCompatActivity() {
             .replace(android.R.id.content, SettingsFragment())
             .commit()
     }
+
+    override fun onPreferenceDisplayDialog(
+        caller: PreferenceFragmentCompat,
+        pref: Preference?
+    ): Boolean {
+        return when (pref) {
+            is BiometricEditTextPreference -> {
+                val f = BiometricEditTextPreference.BiometricPasswordDialog()
+                val manager = caller.fragmentManager ?: return false
+                f.setTargetFragment(caller, 0)
+                f.show(manager, BiometricEditTextPreference.DIALOG_TAG)
+
+                val b = Bundle(1)
+                b.putString("key", pref.key)
+                f.arguments = b
+                true
+            }
+            else -> false
+        }
+    }
+
 
     class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -94,5 +116,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
     }
+
 }
 

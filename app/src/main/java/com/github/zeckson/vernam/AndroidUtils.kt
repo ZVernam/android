@@ -1,7 +1,6 @@
 package com.github.zeckson.vernam
 
 import android.app.Activity
-import android.app.Application
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
