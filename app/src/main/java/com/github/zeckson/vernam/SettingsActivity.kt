@@ -1,15 +1,16 @@
 package com.github.zeckson.vernam
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.InputType
-import android.util.Base64
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
-import androidx.preference.*
-import java.security.KeyStoreException
-import javax.crypto.NoSuchPaddingException
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreferenceCompat
 
 class SettingsActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
@@ -43,7 +44,6 @@ class SettingsActivity : AppCompatActivity(),
             if (context != null) {
                 defaultPreference = PreferenceManager.getDefaultSharedPreferences(context)
 
-                setupPassword()
                 setupBiometric(context)
             }
 
@@ -52,59 +52,28 @@ class SettingsActivity : AppCompatActivity(),
         private fun setupBiometric(context: Context) {
             val biometricSwitchPreference =
                 findPreference<SwitchPreferenceCompat>(getString(R.string.preference_is_biometric))
-            when (BiometricManager.from(context).canAuthenticate()) {
-                BiometricManager.BIOMETRIC_SUCCESS, BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                    biometricSwitchPreference?.isVisible = true
-                }
-                else -> {
-                    // nothing
-                }
-            }
-        }
-
-        private fun setupPassword() {
-            val passwordPreference =
-                findPreference<EditTextPreference>(getString(R.string.preference_password))
-
-            passwordPreference?.setOnPreferenceChangeListener { _, newValue ->
-
-                val defaultCipher = getDefaultCipher()
-                if (defaultCipher.init()) {
-
-                    val value = newValue as String
-                    try {
-                        val result = defaultCipher.doFinal(value.toByteArray())
-                        val b64 = Base64.encodeToString(result, Base64.DEFAULT)
-                        val existing =
-                            defaultPreference.getString(
-                                getString(R.string.preference_password),
-                                ""
-                            )
-                        if (existing != b64) {
-                            defaultPreference.edit()
-                                .putString(getString(R.string.preference_password), b64)
-                                .apply()
-                        }
-                    } catch (e: RuntimeException) {
-                        when (e) {
-                            is KeyStoreException,
-                            is NoSuchPaddingException ->
-                                throw RuntimeException("Failed to encrypt value", e)
-                            else -> throw e
+            biometricSwitchPreference?.let {
+                when (BiometricManager.from(context).canAuthenticate()) {
+                    BiometricManager.BIOMETRIC_SUCCESS -> {
+                        it.isVisible = true
+                    }
+                    BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                        it.isVisible = true
+                        it.shouldDisableView = true
+                        it.title = "Click to setup Biometric"
+                        it.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                            startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+                            true
                         }
                     }
-
+                    else -> {
+                        // nothing
+                    }
                 }
-                false
             }
 
-            passwordPreference?.summaryProvider = Preference.SummaryProvider<EditTextPreference> {
-                if (it.text == null || it.text.isEmpty()) "Not set" else "Password is set"
-            }
-            passwordPreference?.setOnBindEditTextListener {
-                it.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
         }
+
     }
 
 }
