@@ -39,6 +39,7 @@
             android:key="somekey"
             android:title="Default password"
             android:summary="Set default password if necessary"
+            app:dialogLayout="@layout/password_dialog"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="false" />
 

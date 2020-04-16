@@ -11,7 +11,11 @@ import android.widget.EditText
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.preference.*
+import androidx.preference.EditTextPreference
+import androidx.preference.Preference.SummaryProvider
+import androidx.preference.PreferenceDialogFragmentCompat
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceViewHolder
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
@@ -95,12 +99,39 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
         }
     }
 
-    class BiometricPasswordDialog(val cipher: Cipher?) : EditTextPreferenceDialogFragmentCompat() {
+    class BiometricPasswordDialog(val cipher: Cipher?) : PreferenceDialogFragmentCompat() {
+
         private lateinit var myEditText: EditText
+        private lateinit var mText: CharSequence
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            val text = if (savedInstanceState == null) {
+                getEditTextPreference().text
+            } else {
+                savedInstanceState.getCharSequence(SAVE_STATE_TEXT)
+            }
+            mText = text ?: ""
+        }
+
 
         override fun onBindDialogView(view: View) {
             super.onBindDialogView(view)
-            myEditText = view.findViewById(android.R.id.edit)
+
+            myEditText = view.findViewById<EditText>(R.id.passwordTextPreference)
+            myEditText.requestFocus()
+            if (mText.isNotEmpty()) {
+                myEditText.setHint(R.string.password_not_changed)
+                myEditText.setHintTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.primaryTextColor
+                    )
+                )
+            } else {
+                myEditText.setText(mText)
+            }
+
             myEditText.inputType =
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
@@ -119,10 +150,23 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
                 }
             }
         }
+
+        override fun onSaveInstanceState(outState: Bundle) {
+            super.onSaveInstanceState(outState)
+            outState.putCharSequence(SAVE_STATE_TEXT, mText)
+        }
+
+
+        private fun getEditTextPreference(): EditTextPreference {
+            return preference as EditTextPreference
+        }
+
+
     }
 
     companion object {
-        val DIALOG_TAG = "BiometricPasswordDialog"
+        private const val DIALOG_TAG = "BiometricPasswordDialog"
         private const val TAG = "BiometricPasswordPreference"
+        private const val SAVE_STATE_TEXT = "BiometricPasswordDialog.text"
     }
 }

@@ -29,5 +29,6 @@
     <string name="prompt_info_description">Your password is secured by biometric authentication</string>
     <string name="do_not_use_password">Enter password manually</string>
     <string name="cancel_enter_password">Cancel</string>
+    <string name="password_not_changed">[unchanged]</string>
 
 </resources>
