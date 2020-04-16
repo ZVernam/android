@@ -28,15 +28,8 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
-        <EditTextPreference
-            android:key="@string/preference_password"
-            android:title="Default password"
-            android:summary="Set default password if necessary"
-            app:iconSpaceReserved="false"
-            app:useSimpleSummaryProvider="false" />
-
         <com.github.zeckson.vernam.BiometricEditTextPreference
-            android:key="somekey"
+            android:key="@string/preference_password"
             android:title="Default password"
             android:summary="Set default password if necessary"
             app:dialogLayout="@layout/password_dialog"

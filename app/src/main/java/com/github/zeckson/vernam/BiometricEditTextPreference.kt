@@ -1,6 +1,7 @@
 package com.github.zeckson.vernam
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.util.AttributeSet
@@ -8,6 +9,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
@@ -144,10 +146,23 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
                 }
 
                 val value = encrypted ?: text
-                val preference = preference as EditTextPreference
-                if (preference.callChangeListener(value)) {
-                    preference.text = value
-                }
+                saveValue(value)
+            }
+        }
+
+        private fun saveValue(value: String) {
+            val preference = preference as EditTextPreference
+            if (preference.callChangeListener(value)) {
+                preference.text = value
+            }
+        }
+
+        override fun onPrepareDialogBuilder(builder: AlertDialog.Builder?) {
+            super.onPrepareDialogBuilder(builder)
+            builder?.setNeutralButton(R.string.clear_default_password) { _: DialogInterface, _: Int ->
+                saveValue(
+                    ""
+                )
             }
         }
 
