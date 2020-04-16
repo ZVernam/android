@@ -2,27 +2,38 @@ package com.github.zeckson.vernam
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.util.AttributeSet
+import android.util.Base64
 import android.util.Log
+import android.view.View
+import android.widget.EditText
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.preference.DialogPreference
-import androidx.preference.PreferenceDialogFragmentCompat
+import androidx.preference.EditTextPreference
+import androidx.preference.EditTextPreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceViewHolder
+import javax.crypto.Cipher
 
 class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
-    DialogPreference(context, attrs) {
+    EditTextPreference(context, attrs) {
 
     fun showBiometricPrompt(caller: PreferenceFragmentCompat): Boolean {
         caller.fragmentManager ?: return false
-        promptBiometric(createPromptInfo(), createBiometricPrompt(caller))
+        val cipher = getDefaultCipher()
+        if (cipher.init()) {
+            createBiometricPrompt(caller).authenticate(
+                createPromptInfo(),
+                BiometricPrompt.CryptoObject(cipher)
+            )
+        }
         return true
     }
 
-    fun showDialog(caller: PreferenceFragmentCompat) {
-        val dialog = BiometricPasswordDialog()
+    fun showDialog(caller: PreferenceFragmentCompat, cipher: Cipher?) {
+        val dialog = BiometricPasswordDialog(cipher)
         dialog.setTargetFragment(caller, 0)
         dialog.show(caller.fragmentManager!!, DIALOG_TAG)
 
@@ -50,7 +61,7 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 Log.d(TAG, "Authentication was successful")
-                showDialog(caller)
+                showDialog(caller, result.cryptoObject?.cipher)
             }
         }
 
@@ -81,9 +92,29 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
         }
     }
 
-    class BiometricPasswordDialog : PreferenceDialogFragmentCompat() {
+    class BiometricPasswordDialog(val cipher: Cipher?) : EditTextPreferenceDialogFragmentCompat() {
+        private lateinit var myEditText: EditText
+
+        override fun onBindDialogView(view: View) {
+            super.onBindDialogView(view)
+            myEditText = view.findViewById(android.R.id.edit)
+            myEditText.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+
         override fun onDialogClosed(positiveResult: Boolean) {
-            TODO("Not yet implemented")
+            if (positiveResult) {
+                val text = myEditText.text.toString()
+                val encrypted = cipher?.let {
+                    Base64.encodeToString(it.doFinal(text.toByteArray()), Base64.DEFAULT)
+                }
+
+                val value = encrypted ?: text
+                val preference = preference as EditTextPreference
+                if (preference.callChangeListener(value)) {
+                    preference.text = value
+                }
+            }
         }
     }
 

@@ -19,7 +19,7 @@ fun promptBiometric(
     promptInfo: BiometricPrompt.PromptInfo,
     biometricPrompt: BiometricPrompt
 ) {
-    if (getDefaultCipher().isValid()) {
+    if (getDefaultCipher().init()) {
         biometricPrompt.authenticate(promptInfo)
     }
 }
@@ -68,7 +68,7 @@ private fun setupKeyStore(): KeyStore {
         val builder = KeyGenParameterSpec.Builder(DEFAULT_KEY_NAME, keyProperties)
             .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
             // Key will be invalid if not authenticated through biometrics
-//            .setUserAuthenticationRequired(true)
+            .setUserAuthenticationRequired(true)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
             .setInvalidatedByBiometricEnrollment(true)
 
@@ -95,16 +95,13 @@ private fun setupKeyStore(): KeyStore {
  * @return `true` if initialization succeeded, `false` if the lock screen has been disabled or
  * reset after key generation, or if a fingerprint was enrolled after key generation.
  */
-fun Cipher.isValid(): Boolean {
-    try {
-        this.init(
-            Cipher.ENCRYPT_MODE,
-            getSecretKey()
-        )
-        return true
+fun Cipher.init(mode: Int = Cipher.ENCRYPT_MODE): Boolean {
+    return try {
+        this.init(mode, getSecretKey())
+        true
     } catch (e: Exception) {
         when (e) {
-            is KeyPermanentlyInvalidatedException -> return false
+            is KeyPermanentlyInvalidatedException -> false
             is KeyStoreException,
             is CertificateException,
             is UnrecoverableKeyException,

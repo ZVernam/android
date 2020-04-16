@@ -69,7 +69,7 @@ class SettingsActivity : AppCompatActivity(),
             passwordPreference?.setOnPreferenceChangeListener { _, newValue ->
 
                 val defaultCipher = getDefaultCipher()
-                if (defaultCipher.isValid()) {
+                if (defaultCipher.init()) {
 
                     val value = newValue as String
                     try {
