@@ -26,17 +26,7 @@ class SettingsActivity : AppCompatActivity(),
         pref: Preference?
     ): Boolean {
         return when (pref) {
-            is BiometricEditTextPreference -> {
-                val f = BiometricEditTextPreference.BiometricPasswordDialog()
-                val manager = caller.fragmentManager ?: return false
-                f.setTargetFragment(caller, 0)
-                f.show(manager, BiometricEditTextPreference.DIALOG_TAG)
-
-                val b = Bundle(1)
-                b.putString("key", pref.key)
-                f.arguments = b
-                true
-            }
+            is BiometricEditTextPreference -> pref.showBiometricPrompt(caller)
             else -> false
         }
     }
