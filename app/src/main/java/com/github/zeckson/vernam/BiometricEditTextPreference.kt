@@ -17,7 +17,6 @@ import androidx.preference.EditTextPreference
 import androidx.preference.Preference.SummaryProvider
 import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceViewHolder
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
@@ -91,9 +90,7 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
             .build()
     }
 
-
-    override fun onBindViewHolder(holder: PreferenceViewHolder?) {
-        super.onBindViewHolder(holder)
+    override fun onAttached() {
         when (BiometricManager.from(context).canAuthenticate()) {
             BiometricManager.BIOMETRIC_SUCCESS -> this.isVisible = true
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> this.isEnabled = false
