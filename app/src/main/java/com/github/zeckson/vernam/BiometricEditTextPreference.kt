@@ -11,14 +11,17 @@ import android.widget.EditText
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.preference.EditTextPreference
-import androidx.preference.EditTextPreferenceDialogFragmentCompat
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceViewHolder
+import androidx.preference.*
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
     EditTextPreference(context, attrs) {
+
+    init {
+        this.summaryProvider = SummaryProvider<EditTextPreference> {
+            if (it.text == null || it.text.isEmpty()) "Not set" else "Password is set"
+        }
+    }
 
     fun showBiometricPrompt(caller: PreferenceFragmentCompat): Boolean {
         caller.fragmentManager ?: return false
