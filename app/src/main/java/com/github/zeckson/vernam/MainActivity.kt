@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.v(TAG, "Creating... (${if(savedInstanceState==null) "without" else "with"} savedState)")
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -48,6 +49,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        Log.v(TAG, "Starting...")
+        // TODO: Synchronize UI here
         if (settings.isBiometricEnabled()) {
             val iv = settings.getPasswordIV()
             if (iv != null) {
@@ -64,6 +67,26 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.v(TAG, "Resuming...")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.v(TAG, "Paused...")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.v(TAG, "Stopped...")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.v(TAG, "Destroyed...")
     }
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo {
