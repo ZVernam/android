@@ -10,6 +10,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
 
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val myViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         Log.v(TAG, "Creating... (${if(savedInstanceState==null) "without" else "with"} savedState)")
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -87,6 +89,11 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.v(TAG, "Destroyed...")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.v(TAG, "Saving state...")
     }
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo {
