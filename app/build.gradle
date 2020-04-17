@@ -5,6 +5,9 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
     defaultConfig {
         applicationId "com.github.zeckson.vernam"
