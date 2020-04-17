@@ -59,10 +59,13 @@ class BiometricEditTextPreference(
         }
         caller.fragmentManager ?: return false
         val cipher = setupInitedEncryptCipher()
-        createBiometricPrompt(caller).authenticate(
-            createPromptInfo(),
-            BiometricPrompt.CryptoObject(cipher)
-        )
+        cipher?.let {
+            createBiometricPrompt(caller).authenticate(
+                createPromptInfo(),
+                BiometricPrompt.CryptoObject(cipher)
+            )
+            return true
+        }
         return true
     }
 

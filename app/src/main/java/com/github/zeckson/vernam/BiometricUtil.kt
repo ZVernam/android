@@ -1,6 +1,7 @@
 package com.github.zeckson.vernam
 
 import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import java.io.IOException
 import java.security.InvalidAlgorithmParameterException
@@ -19,15 +20,24 @@ private const val DEFAULT_KEY_NAME = "default_key"
 private const val CIPHER_STRING =
     "${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}"
 
-fun setupInitedEncryptCipher(): Cipher {
+fun setupInitedEncryptCipher(): Cipher? {
     val cipher = Cipher.getInstance(CIPHER_STRING)
-    cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
+    try {
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
+    } catch (e: KeyPermanentlyInvalidatedException) {
+        return null
+    }
+
     return cipher
 }
 
-fun setupInitedDecryptCipher(iv: ByteArray): Cipher {
+fun setupInitedDecryptCipher(iv: ByteArray): Cipher? {
     val cipher = Cipher.getInstance(CIPHER_STRING)
-    cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), IvParameterSpec(iv))
+    try {
+        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), IvParameterSpec(iv))
+    } catch (e: KeyPermanentlyInvalidatedException) {
+        return null
+    }
     return cipher
 }
 

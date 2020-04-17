@@ -52,11 +52,12 @@ class MainActivity : AppCompatActivity() {
             val iv = settings.getPasswordIV()
             if (iv != null) {
                 try {
-                    val cipher = setupInitedDecryptCipher(iv)
-                    createBiometricPrompt().authenticate(
-                        createPromptInfo(),
-                        BiometricPrompt.CryptoObject(cipher)
-                    )
+                    setupInitedDecryptCipher(iv)?.let {
+                        createBiometricPrompt().authenticate(
+                            createPromptInfo(),
+                            BiometricPrompt.CryptoObject(it)
+                        )
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to initialize cipher. Drop biometric!", e)
                 }
