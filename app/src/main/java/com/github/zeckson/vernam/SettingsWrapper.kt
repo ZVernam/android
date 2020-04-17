@@ -6,7 +6,6 @@ import android.util.Base64
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceManager
 import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
 
 class SettingsWrapper private constructor(
     val preferences: SharedPreferences,
@@ -22,7 +21,7 @@ class SettingsWrapper private constructor(
         return preferences.getInt(getString(R.string.preference_max_size), MAX_CIPHER_SIZE_DEFAULT)
     }
 
-    fun getDefaultPasswordHash(cipher: Cipher): String? {
+    private fun getEncodedPasswordAndIv(): Pair<ByteArray, ByteArray>? {
         val password = getEncodedPassword()
         if (password.isNullOrEmpty()) return null
         val parts = password.split(":")
@@ -31,7 +30,16 @@ class SettingsWrapper private constructor(
         }
         val input = Base64.decode(parts[0], Base64.DEFAULT)
         val iv = Base64.decode(parts[1], Base64.DEFAULT)
-        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(),IvParameterSpec(iv))
+        return Pair(input, iv)
+    }
+
+    fun getPasswordIV(): ByteArray? {
+        val (_, iv) = getEncodedPasswordAndIv() ?: return null
+        return iv
+    }
+
+    fun getDefaultPasswordHash(cipher: Cipher): String? {
+        val (input, _) = getEncodedPasswordAndIv() ?: return null
         val decoded = cipher.doFinal(input)
         return decoded.toString(Charsets.UTF_8)
     }

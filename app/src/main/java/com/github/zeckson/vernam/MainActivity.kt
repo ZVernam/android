@@ -49,12 +49,18 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (settings.isBiometricEnabled()) {
-            val cipher = getDefaultCipher()
-            if (cipher.init()) {
-                createBiometricPrompt().authenticate(
-                    createPromptInfo(),
-                    BiometricPrompt.CryptoObject(cipher)
-                )
+            val iv = settings.getPasswordIV()
+            if (iv != null) {
+                try {
+                    val cipher = setupInitedDecryptCipher(iv)
+                    createBiometricPrompt().authenticate(
+                        createPromptInfo(),
+                        BiometricPrompt.CryptoObject(cipher)
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to initialize cipher. Drop biometric!", e)
+                }
+
             }
         }
     }

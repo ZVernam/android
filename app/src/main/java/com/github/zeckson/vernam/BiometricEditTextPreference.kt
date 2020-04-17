@@ -58,13 +58,11 @@ class BiometricEditTextPreference(
             return false
         }
         caller.fragmentManager ?: return false
-        val cipher = getDefaultCipher()
-        if (cipher.init()) {
-            createBiometricPrompt(caller).authenticate(
-                createPromptInfo(),
-                BiometricPrompt.CryptoObject(cipher)
-            )
-        }
+        val cipher = setupInitedEncryptCipher()
+        createBiometricPrompt(caller).authenticate(
+            createPromptInfo(),
+            BiometricPrompt.CryptoObject(cipher)
+        )
         return true
     }
 
@@ -164,8 +162,9 @@ class BiometricEditTextPreference(
                 val encrypted = cipher?.let {
                     val b64 =
                         Base64.encodeToString(it.doFinal(hashed.toByteArray()), Base64.DEFAULT)
-                    Log.v(TAG, "Encrypted (Base64): $hashed")
+                    Log.v(TAG, "Encrypted (Base64): $b64")
                     val ivBase64 = Base64.encodeToString(cipher.iv, Base64.DEFAULT)
+                    Log.v(TAG, "Encrypted IV (Base64): $ivBase64")
                     "$b64:$ivBase64"
                 }
 
