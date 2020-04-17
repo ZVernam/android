@@ -3,7 +3,6 @@ package com.github.zeckson.vernam
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
-import androidx.biometric.BiometricPrompt
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException
@@ -14,16 +13,6 @@ import javax.crypto.SecretKey
 
 private const val ANDROID_KEY_STORE = "AndroidKeyStore"
 private const val DEFAULT_KEY_NAME = "default_key"
-
-fun promptBiometric(
-    promptInfo: BiometricPrompt.PromptInfo,
-    biometricPrompt: BiometricPrompt
-) {
-    if (getDefaultCipher().init()) {
-        biometricPrompt.authenticate(promptInfo)
-    }
-}
-
 private val defaultCipher = setupCipher()
 
 fun getDefaultCipher() = defaultCipher

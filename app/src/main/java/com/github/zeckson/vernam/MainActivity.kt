@@ -49,7 +49,13 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (settings.isBiometricEnabled()) {
-            promptBiometric(createPromptInfo(), createBiometricPrompt())
+            val cipher = getDefaultCipher()
+            if (cipher.init()) {
+                createBiometricPrompt().authenticate(
+                    createPromptInfo(),
+                    BiometricPrompt.CryptoObject(cipher)
+                )
+            }
         }
     }
 
@@ -86,11 +92,7 @@ class MainActivity : AppCompatActivity() {
                 super.onAuthenticationSucceeded(result)
                 Log.d(TAG, "Authentication was successful")
                 passwordText.setText(
-                    settings.preferences.getString(
-                        getString(R.string.preference_password),
-                        ""
-                    )
-                )
+                    result.cryptoObject?.cipher?.let { settings.getDefaultPasswordHash(it) })
                 updateTextValues()
             }
         }
@@ -133,7 +135,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val isHashed = settings.preferences.getBoolean(getString(R.string.preference_is_hashed), false)
+        val isHashed =
+            settings.preferences.getBoolean(getString(R.string.preference_is_hashed), false)
         val generated =
             encrypt(if (isHashed) hash(textWithToken) else textWithToken, hash(password))
         val maxSize = settings.getMaxCipherSize()

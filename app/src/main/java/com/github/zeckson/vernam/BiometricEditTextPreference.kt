@@ -157,9 +157,16 @@ class BiometricEditTextPreference(
 
         override fun onDialogClosed(positiveResult: Boolean) {
             if (positiveResult) {
-                val hashed = hash(myEditText.text.toString())
+                val text = myEditText.text.toString()
+                val hashed = hash(text)
+                Log.v(TAG, "Saving password: $text")
+                Log.v(TAG, "Hashed: $hashed")
                 val encrypted = cipher?.let {
-                    Base64.encodeToString(it.doFinal(hashed.toByteArray()), Base64.DEFAULT)
+                    val b64 =
+                        Base64.encodeToString(it.doFinal(hashed.toByteArray()), Base64.DEFAULT)
+                    Log.v(TAG, "Encrypted (Base64): $hashed")
+                    val ivBase64 = Base64.encodeToString(cipher.iv, Base64.DEFAULT)
+                    "$b64:$ivBase64"
                 }
 
                 val value = encrypted ?: hashed
