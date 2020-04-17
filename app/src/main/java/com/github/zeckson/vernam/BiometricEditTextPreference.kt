@@ -54,7 +54,7 @@ class BiometricEditTextPreference(
 
     fun showBiometricPrompt(caller: PreferenceFragmentCompat): Boolean {
         if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED) {
-            caller.startActivityForResult(Intent(Settings.ACTION_SECURITY_SETTINGS),0)
+            caller.startActivityForResult(Intent(Settings.ACTION_SECURITY_SETTINGS), 0)
             return false
         }
         caller.fragmentManager ?: return false
@@ -157,12 +157,12 @@ class BiometricEditTextPreference(
 
         override fun onDialogClosed(positiveResult: Boolean) {
             if (positiveResult) {
-                val text = myEditText.text.toString()
+                val hashed = hash(myEditText.text.toString())
                 val encrypted = cipher?.let {
-                    Base64.encodeToString(it.doFinal(text.toByteArray()), Base64.DEFAULT)
+                    Base64.encodeToString(it.doFinal(hashed.toByteArray()), Base64.DEFAULT)
                 }
 
-                val value = encrypted ?: text
+                val value = encrypted ?: hashed
                 saveValue(value)
             }
         }
