@@ -10,8 +10,8 @@ class SettingsWrapper private constructor(
     private val context: Context
 ) {
     fun isBiometricEnabled(): Boolean {
-        val isEnabled = preferences.getBoolean(getString(R.string.preference_is_biometric), false)
-        return isEnabled && BiometricManager.from(context)
+        val password = preferences.getString(getString(R.string.preference_password), null)
+        return password != null && BiometricManager.from(context)
             .canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS
     }
 
