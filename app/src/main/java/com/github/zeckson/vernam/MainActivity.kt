@@ -10,7 +10,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
 
@@ -20,8 +19,8 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MyActivity"
     }
 
-    private val sharedPreferences by lazy {
-        PreferenceManager.getDefaultSharedPreferences(this)
+    private val settings by lazy(LazyThreadSafetyMode.NONE) {
+        SettingsWrapper.get(this)
     }
 
 
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getBoolean(getString(R.string.preference_is_biometric), false)) {
+        if (settings.isBiometricEnabled()) {
             promptBiometric(createPromptInfo(), createBiometricPrompt())
         }
     }
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 super.onAuthenticationSucceeded(result)
                 Log.d(TAG, "Authentication was successful")
                 passwordText.setText(
-                    sharedPreferences.getString(
+                    settings.preferences.getString(
                         getString(R.string.preference_password),
                         ""
                     )
@@ -125,7 +124,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val token = sharedPreferences.getString(getString(R.string.preference_suffix), "")
+        val token = settings.preferences.getString(getString(R.string.preference_suffix), "")
         val textWithToken = plainText + token
 
         val password = passwordText.text.toString()
@@ -134,10 +133,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val isHashed = sharedPreferences.getBoolean(getString(R.string.preference_is_hashed), false)
+        val isHashed = settings.preferences.getBoolean(getString(R.string.preference_is_hashed), false)
         val generated =
             encrypt(if (isHashed) hash(textWithToken) else textWithToken, hash(password))
-        val maxSize = sharedPreferences.getInt(getString(R.string.preference_max_size), 15)
+        val maxSize = settings.getMaxCipherSize()
         cipherText.setText(generated.take(maxSize))
     }
 
