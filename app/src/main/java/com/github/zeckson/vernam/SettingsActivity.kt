@@ -58,6 +58,7 @@ class SettingsActivity : AppCompatActivity(),
                         it.isVisible = true
                     }
                     BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                        it.isEnabled = false
                         it.isVisible = true
                         it.shouldDisableView = true
                         it.title = "Click to setup Biometric"
