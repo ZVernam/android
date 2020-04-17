@@ -2,7 +2,9 @@ package com.github.zeckson.vernam
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.text.InputType
 import android.util.AttributeSet
 import android.util.Base64
@@ -10,7 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.*
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.preference.EditTextPreference
@@ -19,16 +21,42 @@ import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
 import javax.crypto.Cipher
 
-class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
+class BiometricEditTextPreference(
+    context: Context?,
+    attrs: AttributeSet?
+) :
     EditTextPreference(context, attrs) {
+    private val biometricStatus: Int
+        get() = from(context).canAuthenticate()
 
     init {
         this.summaryProvider = SummaryProvider<EditTextPreference> {
-            if (it.text == null || it.text.isEmpty()) "Not set" else "Password is set"
+            if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED
+            ) {
+                "Biometric weren't enrolled. Click here to setup"
+            } else if (it.text == null || it.text.isEmpty()) {
+                "Not set"
+            } else {
+                "Password is set"
+            }
         }
     }
 
+
+    override fun onAttached() {
+        when (biometricStatus) {
+            BIOMETRIC_SUCCESS -> this.isVisible = true
+            BIOMETRIC_ERROR_NONE_ENROLLED -> this.isVisible = true
+            else -> this.isVisible = false
+        }
+    }
+
+
     fun showBiometricPrompt(caller: PreferenceFragmentCompat): Boolean {
+        if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED) {
+            caller.startActivityForResult(Intent(Settings.ACTION_SECURITY_SETTINGS),0)
+            return false
+        }
         caller.fragmentManager ?: return false
         val cipher = getDefaultCipher()
         if (cipher.init()) {
@@ -88,14 +116,6 @@ class BiometricEditTextPreference(context: Context?, attrs: AttributeSet?) :
             // Also note that setDeviceCredentialAllowed and setNegativeButtonText are
             // incompatible so that if you uncomment one you must comment out the other
             .build()
-    }
-
-    override fun onAttached() {
-        when (BiometricManager.from(context).canAuthenticate()) {
-            BiometricManager.BIOMETRIC_SUCCESS -> this.isVisible = true
-            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> this.isEnabled = false
-            else -> this.isVisible = false
-        }
     }
 
     class BiometricPasswordDialog(val cipher: Cipher?) : PreferenceDialogFragmentCompat() {

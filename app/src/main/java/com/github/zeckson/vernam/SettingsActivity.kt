@@ -1,10 +1,8 @@
 package com.github.zeckson.vernam
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.preference.Preference
@@ -56,16 +54,6 @@ class SettingsActivity : AppCompatActivity(),
                 when (BiometricManager.from(context).canAuthenticate()) {
                     BiometricManager.BIOMETRIC_SUCCESS -> {
                         it.isVisible = true
-                    }
-                    BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                        it.isEnabled = false
-                        it.isVisible = true
-                        it.shouldDisableView = true
-                        it.title = "Click to setup Biometric"
-                        it.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                            startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
-                            true
-                        }
                     }
                     else -> {
                         // nothing

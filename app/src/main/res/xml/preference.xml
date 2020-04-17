@@ -34,13 +34,15 @@
             android:summary="Set default password if necessary"
             app:dialogLayout="@layout/password_dialog"
             app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false"
             app:useSimpleSummaryProvider="false" />
 
         <SwitchPreferenceCompat
             android:key="@string/preference_is_biometric"
-            android:title="Use biometric auth"
-            app:iconSpaceReserved="false"
-            app:isPreferenceVisible="false" />
+            android:title="Save on change"
+            android:summary="Ask whether to save password on change"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
