@@ -2,8 +2,6 @@ package com.github.zeckson.vernam
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -157,20 +155,9 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setupListeners() {
-        val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) = updateTextValues()
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                // do nothing
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                // do nothing
-            }
-        }
-
-        plainText.addTextChangedListener(textWatcher)
-        passwordText.addTextChangedListener(textWatcher)
+        plainText.onTextChanged(::updateTextValues)
+        passwordText.onTextChanged(::updateTextValues)
 
         copyToClipboard.setOnClickListener {
             val text = cipherText.text.toString()

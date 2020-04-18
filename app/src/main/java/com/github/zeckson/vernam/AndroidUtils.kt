@@ -5,6 +5,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import android.widget.Toast
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -16,6 +19,21 @@ fun Intent?.getHost(): String? {
         }
     }
     return null
+}
+
+fun EditText.onTextChanged(block: () -> Unit) {
+    val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) = block()
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            // do nothing
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            // do nothing
+        }
+    }
+    this.addTextChangedListener(textWatcher)
 }
 
 fun Activity.setTextToClipBoard(text: String?) {
