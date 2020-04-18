@@ -19,6 +19,9 @@ class SettingsWrapper private constructor(
         return context.getString(resId)
     }
 
+    val isHashed: Boolean
+        get() = preferences.getBoolean(getString(R.string.preference_is_hashed), false)
+
     val isBiometricEnabled: Boolean
         get() {
             val password = getEncodedPassword()

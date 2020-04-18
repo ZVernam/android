@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
+import javax.crypto.Cipher
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,23 +31,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val withState = if (savedInstanceState == null) "without" else "with"
-        Log.v(TAG, "Creating... ($withState) savedState)")
-
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        restoreSavedState()
+        restoreSavedState(savedInstanceState == null)
 
         updateTextValues()
 
         setupListeners()
-
-        validateBiometrics()
     }
 
-    private fun restoreSavedState() {
+    private fun restoreSavedState(newState: Boolean) {
+        val withState = if (newState) "without" else "with"
+        Log.v(TAG, "Creating... ($withState) savedState)")
+
         val myViewModel = mainViewModel
+
+        if (newState && mainViewModel.passwordState == MainViewModel.PasswordState.SET) {
+            validateBiometrics()
+        }
 
         intent.getHost()?.let {
             Log.i(TAG, "Received url from intent: $it")
@@ -55,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         plainText.setText(myViewModel.plainTextValue)
         passwordText.setText(myViewModel.password)
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -66,21 +70,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun validateBiometrics() {
-        if (settings.isBiometricEnabled) {
-            val iv = settings.getPasswordIV()
-            if (iv != null) {
-                try {
-                    setupInitedDecryptCipher(iv)?.let {
-                        createBiometricPrompt().authenticate(
-                            createPromptInfo(),
-                            BiometricPrompt.CryptoObject(it)
-                        )
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to initialize cipher. Drop biometric!", e)
-                }
+        val iv = settings.getPasswordIV()!!
+        val cipher = setupInitedDecryptCipher(iv)!!
+        createBiometricPrompt(::onBiometricSuccess, ::onBiometricFail).authenticate(
+            createPromptInfo(),
+            BiometricPrompt.CryptoObject(cipher)
+        )
+    }
 
-            }
+    private fun onBiometricFail(code: Int?, messsage: CharSequence?) {
+        if (code != null) {
+            val error = messsage ?: "Error code $code"
+            showToast(error.toString())
+        }
+        // Otherwise user cancelled, so no hash will be loaded
+    }
+
+    private fun onBiometricSuccess(cipher: Cipher) {
+        val loadedPasswordHash =
+            settings.getDefaultPasswordHash(cipher)
+        if (loadedPasswordHash != null) {
+            mainViewModel.passwordHash = loadedPasswordHash
+            passwordText.setText("")
+            passwordText.hint = getString(R.string.default_password_hint)
+            updateTextValues()
         }
     }
 
@@ -127,26 +140,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun createBiometricPrompt(): BiometricPrompt {
+    private fun createBiometricPrompt(
+        onSuccess: (cipher: Cipher) -> Unit,
+        onFail: (code: Int?, msg: CharSequence?) -> Unit
+    ): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(this)
 
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
                 Log.d(TAG, "$errorCode :: $errString")
+                onFail(errorCode, errString)
             }
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
                 Log.d(TAG, "Authentication failed for an unknown reason")
+                onFail(null, null)
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 Log.d(TAG, "Authentication was successful")
-                passwordText.setText(
-                    result.cryptoObject?.cipher?.let { settings.getDefaultPasswordHash(it) })
-                updateTextValues()
+
+                result.cryptoObject?.cipher?.let { onSuccess(it) }
             }
         }
 
@@ -175,26 +192,9 @@ class MainActivity : AppCompatActivity() {
     private fun updateTextValues() {
 
         val plainText = plainText.text.toString()
-        if (plainText.isEmpty()) {
-            cipherText.setText("")
-            return
-        }
-
-        val token = settings.preferences.getString(getString(R.string.preference_suffix), "")
-        val textWithToken = plainText + token
-
         val password = passwordText.text.toString()
-        if (password.isEmpty()) {
-            cipherText.setText("")
-            return
-        }
 
-        val isHashed =
-            settings.preferences.getBoolean(getString(R.string.preference_is_hashed), false)
-        val generated =
-            encrypt(if (isHashed) hash(textWithToken) else textWithToken, hash(password))
-        val maxSize = settings.maxCipherSize
-        cipherText.setText(generated.take(maxSize))
+        cipherText.setText(mainViewModel.generateCipherText(plainText, password))
     }
 
 

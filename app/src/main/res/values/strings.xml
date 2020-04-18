@@ -31,5 +31,6 @@
     <string name="cancel_enter_password">Cancel</string>
     <string name="password_not_changed">[unchanged]</string>
     <string name="clear_default_password">Clear</string>
+    <string name="default_password_hint">[default password]</string>
 
 </resources>
