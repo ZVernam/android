@@ -11,15 +11,28 @@ class SettingsWrapper private constructor(
     val preferences: SharedPreferences,
     private val context: Context
 ) {
-    fun isBiometricEnabled(): Boolean {
-        val password = getEncodedPassword()
-        return !password.isNullOrEmpty() && BiometricManager.from(context)
-            .canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS
+
+    private fun getEncodedPassword() =
+        preferences.getString(getString(R.string.preference_password), null)
+
+    private fun getString(resId: Int): String? {
+        return context.getString(resId)
     }
 
-    fun getMaxCipherSize(): Int {
-        return preferences.getInt(getString(R.string.preference_max_size), MAX_CIPHER_SIZE_DEFAULT)
-    }
+    val isBiometricEnabled: Boolean
+        get() {
+            val password = getEncodedPassword()
+            return !password.isNullOrEmpty() && BiometricManager.from(context)
+                .canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS
+        }
+
+    val maxCipherSize: Int
+        get() {
+            return preferences.getInt(
+                getString(R.string.preference_max_size),
+                MAX_CIPHER_SIZE_DEFAULT
+            )
+        }
 
     private fun getEncodedPasswordAndIv(): Pair<ByteArray, ByteArray>? {
         val password = getEncodedPassword()
@@ -44,15 +57,12 @@ class SettingsWrapper private constructor(
         return decoded.toString(Charsets.UTF_8)
     }
 
-    private fun getEncodedPassword() =
-        preferences.getString(getString(R.string.preference_password), null)
-
-    private fun getString(resId: Int): String? {
-        return context.getString(resId)
-    }
+    val suffix: String
+        get() = preferences.getString(getString(R.string.preference_suffix), EMPTY_STRING)!!
 
     companion object {
         private const val MAX_CIPHER_SIZE_DEFAULT = 15
+        private const val EMPTY_STRING = ""
         fun get(ctx: Context): SettingsWrapper {
             return SettingsWrapper(PreferenceManager.getDefaultSharedPreferences(ctx), ctx)
         }

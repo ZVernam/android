@@ -10,7 +10,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.inputs_layout.*
 
@@ -24,36 +24,51 @@ class MainActivity : AppCompatActivity() {
         SettingsWrapper.get(this)
     }
 
+    private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val myViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        Log.v(TAG, "Creating... (${if(savedInstanceState==null) "without" else "with"} savedState)")
+
+        val withState = if (savedInstanceState == null) "without" else "with"
+        Log.v(TAG, "Creating... ($withState) savedState)")
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        intent.getHost()?.let { plainText.setText(it) }
+        restoreSavedState()
+
         updateTextValues()
 
-        setupTextListeners()
+        setupListeners()
 
-        copyToClipboard.setOnClickListener {
-            val text = cipherText.text.toString()
-            if (text.isEmpty()) return@setOnClickListener
-
-            this.setTextToClipBoard(text)
-            showToast("Text Copied To Clipboard")
-            setResultText(text)
-            // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
-            finish()
-        }
+        validateBiometrics()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.v(TAG, "Starting...")
-        // TODO: Synchronize UI here
-        if (settings.isBiometricEnabled()) {
+    private fun restoreSavedState() {
+        val myViewModel = mainViewModel
+
+        intent.getHost()?.let {
+            Log.i(TAG, "Received url from intent: $it")
+            myViewModel.plainTextValue = it
+        }
+
+        plainText.setText(myViewModel.plainTextValue)
+        passwordText.setText(myViewModel.password)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.v(TAG, "Saving state...")
+
+        mainViewModel.password = passwordText.text.toString()
+        mainViewModel.plainTextValue = plainText.text.toString()
+    }
+
+    private fun validateBiometrics() {
+        if (settings.isBiometricEnabled) {
             val iv = settings.getPasswordIV()
             if (iv != null) {
                 try {
@@ -70,6 +85,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        Log.v(TAG, "Starting...")
+
+        // Good place to run animation and do long job
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -89,11 +112,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.v(TAG, "Destroyed...")
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.v(TAG, "Saving state...")
     }
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo {
@@ -138,7 +156,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun setupTextListeners() {
+    private fun setupListeners() {
         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) = updateTextValues()
 
@@ -153,6 +171,18 @@ class MainActivity : AppCompatActivity() {
 
         plainText.addTextChangedListener(textWatcher)
         passwordText.addTextChangedListener(textWatcher)
+
+        copyToClipboard.setOnClickListener {
+            val text = cipherText.text.toString()
+            if (text.isEmpty()) return@setOnClickListener
+
+            this.setTextToClipBoard(text)
+            showToast("Text Copied To Clipboard")
+            setResultText(text)
+            // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
+            finish()
+        }
+
     }
 
     private fun updateTextValues() {
@@ -176,7 +206,7 @@ class MainActivity : AppCompatActivity() {
             settings.preferences.getBoolean(getString(R.string.preference_is_hashed), false)
         val generated =
             encrypt(if (isHashed) hash(textWithToken) else textWithToken, hash(password))
-        val maxSize = settings.getMaxCipherSize()
+        val maxSize = settings.maxCipherSize
         cipherText.setText(generated.take(maxSize))
     }
 
