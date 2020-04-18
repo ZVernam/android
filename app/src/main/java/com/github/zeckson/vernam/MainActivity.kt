@@ -93,6 +93,11 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.passwordHash = loadedPasswordHash
             passwordText.setText("")
             passwordText.hint = getString(R.string.default_password_hint)
+            passwordText.setHintTextColor(
+                ContextCompat.getColor(this, R.color.primaryTextColor)
+            )
+            passwordTextLayout.isHintEnabled = false
+
             updateTextValues()
         }
     }
@@ -101,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         Log.v(TAG, "Starting...")
 
-        // Good place to run animation and do long job
+        plainText.requestFocus()
     }
 
 

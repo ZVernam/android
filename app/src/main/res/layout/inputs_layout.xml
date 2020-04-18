@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -19,10 +18,11 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/default_padding"
-        app:passwordToggleEnabled="true">
+        android:hint="@string/app_input_secret">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordText"
@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin"
             android:ems="@integer/default_input_wide"
-            android:hint="@string/app_input_secret"
             android:autofillHints="password"
             android:inputType="textPassword" />
 
