@@ -9,3 +9,4 @@ Android App for password generation
 -- https://gist.github.com/Tanapruk/1154011542739c223c0cf59997867b15
 -- https://developer.android.com/reference/android/app/KeyguardManager#createConfirmDeviceCredentialIntent(java.lang.CharSequence,%20java.lang.CharSequence)
 -- https://developer.android.com/training/sign-in/biometric-auth
+- [Android Material Components](https://material.io/develop/android/components/text-fields/)
