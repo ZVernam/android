@@ -66,6 +66,14 @@ private fun getOrCreateKey(keyName: String): SecretKey {
         }
     }
 
+
+    return refreshKey(keyName)
+}
+
+/**
+ * Refresh key is called in case if Key was invalidated and we need to recreate key
+ */
+fun refreshKey(keyName: String = DEFAULT_KEY_NAME): SecretKey {
     // The enrolling flow for fingerprint. This is where you ask the user to set up fingerprint
     // for your flow. Use of keys is necessary if you need to know if the set of enrolled
     // fingerprints has changed.

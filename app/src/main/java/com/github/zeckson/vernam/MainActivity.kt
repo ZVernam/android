@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         val myViewModel = mainViewModel
 
-        if (newState && mainViewModel.passwordState == MainViewModel.PasswordState.SET) {
+        if (newState && settings.passwordState == SettingsWrapper.PasswordState.SET) {
             validateBiometrics()
         }
 

@@ -55,16 +55,22 @@ class BiometricEditTextPreference(
     fun showBiometricPrompt(caller: PreferenceFragmentCompat): Boolean {
         if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED) {
             caller.startActivityForResult(Intent(Settings.ACTION_SECURITY_SETTINGS), 0)
-            return false
         }
-        caller.fragmentManager ?: return false
+
+        val settings = SettingsWrapper.get(context)
+        val state = settings.passwordState
+        if (state == SettingsWrapper.PasswordState.RESET) {
+            // Refresh key if state was invalidated
+            text = ""
+            refreshKey()
+        }
+
         val cipher = setupInitedEncryptCipher()
         cipher?.let {
             createBiometricPrompt(caller).authenticate(
                 createPromptInfo(),
                 BiometricPrompt.CryptoObject(cipher)
             )
-            return true
         }
         return true
     }
@@ -72,7 +78,7 @@ class BiometricEditTextPreference(
     fun showDialog(caller: PreferenceFragmentCompat, cipher: Cipher?) {
         val dialog = BiometricPasswordDialog(cipher)
         dialog.setTargetFragment(caller, 0)
-        dialog.show(caller.fragmentManager!!, DIALOG_TAG)
+        dialog.show(caller.parentFragmentManager, DIALOG_TAG)
 
 
         val b = Bundle(1)
@@ -186,9 +192,7 @@ class BiometricEditTextPreference(
         override fun onPrepareDialogBuilder(builder: AlertDialog.Builder?) {
             super.onPrepareDialogBuilder(builder)
             builder?.setNeutralButton(R.string.clear_default_password) { _: DialogInterface, _: Int ->
-                saveValue(
-                    ""
-                )
+                saveValue("")
             }
         }
 

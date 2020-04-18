@@ -8,9 +8,35 @@ import androidx.preference.PreferenceManager
 import javax.crypto.Cipher
 
 class SettingsWrapper private constructor(
-    val preferences: SharedPreferences,
+    private val preferences: SharedPreferences,
     private val context: Context
 ) {
+    enum class PasswordState {
+        NOT_SET,
+        RESET,
+        SET
+    }
+
+    val passwordState: PasswordState by lazy(LazyThreadSafetyMode.NONE, ::loadPasswordState)
+
+    private fun loadPasswordState(): PasswordState {
+        // No password in preferences (or corrupted)
+        val passwordIV = getPasswordIV() ?: return PasswordState.NOT_SET
+
+        // Password set, but biometric was disabled or gone(((
+        if (BiometricManager.from(context)
+                .canAuthenticate() != BiometricManager.BIOMETRIC_SUCCESS
+        ) return PasswordState.RESET
+
+        // Password is set, but invalidated (due biometrics param change)
+        val cipher = setupInitedDecryptCipher(passwordIV)
+
+        return if (cipher == null) {
+            PasswordState.RESET
+        } else {
+            PasswordState.SET
+        }
+    }
 
     private fun getEncodedPassword() =
         preferences.getString(getString(R.string.preference_password), null)
@@ -58,6 +84,10 @@ class SettingsWrapper private constructor(
         val (input, _) = getEncodedPasswordAndIv() ?: return null
         val decoded = cipher.doFinal(input)
         return decoded.toString(Charsets.UTF_8)
+    }
+
+    fun clearPassword() {
+        preferences.edit().putString(getString(R.string.preference_password), "").apply()
     }
 
     val suffix: String
