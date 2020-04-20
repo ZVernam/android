@@ -2,7 +2,6 @@ package com.github.zeckson.vernam
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import kotlin.math.min
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,7 +26,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val isHashed = settings.isHashed
 
         val generated = encrypt(if (isHashed) hash(textWithToken) else textWithToken, passwordHash)
-        val maxSize = min(settings.maxCipherSize, textWithToken.length)
+        val maxSize = textWithToken.length
 
         return generated.take(maxSize)
     }

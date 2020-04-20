@@ -55,14 +55,6 @@ class SettingsWrapper private constructor(
                 .canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS
         }
 
-    val maxCipherSize: Int
-        get() {
-            return preferences.getInt(
-                getString(R.string.preference_max_size),
-                MAX_CIPHER_SIZE_DEFAULT
-            )
-        }
-
     private fun getEncodedPasswordAndIv(): Pair<ByteArray, ByteArray>? {
         val password = getEncodedPassword()
         if (password.isNullOrEmpty()) return null
