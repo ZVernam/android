@@ -96,7 +96,10 @@ class MainActivity : AppCompatActivity() {
             passwordText.setHintTextColor(
                 ContextCompat.getColor(this, R.color.primaryTextColor)
             )
-            passwordTextLayout.isHintEnabled = false
+            passwordTextLayout.collapseLabel()
+            passwordTextLayout.watchLabel()
+//            passwordTextLayout.isHintEnabled = false
+//            passwordTextLayout.
 
             updateTextValues()
         }
