@@ -4,16 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.view.View
 
 class PatchedTextInputLayout(context: Context, attrs: AttributeSet?) :
-    TextInputLayout(context, attrs) {
+    TextInputLayout(context, attrs), View.OnFocusChangeListener {
     private var internalHint: String? = null
+    private var currentHint: CharSequence? = null
 
-    override fun drawableStateChanged() {
-        super.drawableStateChanged()
-
+    fun tryCollapseOnLostFocus() {
         // No hint, no worries
-        val myHint = internalHint?:return
+        val myHint = internalHint ?: return
 
         val isEnabled = isEnabled
         if (!isEnabled) return
@@ -37,13 +37,28 @@ class PatchedTextInputLayout(context: Context, attrs: AttributeSet?) :
         collapsingTextHelper.expansionFraction = 1f
     }
 
-    fun setInternalHint(hint: String, color: Int) {
-        internalHint = hint
+    fun setInternalHint(newHint: String, color: Int) {
+        internalHint = newHint
+        currentHint = hint
+
+        hint = ""
 
         editText.setText("")
-        editText.hint = hint
+        editText.hint = newHint
         editText.setHintTextColor(color)
 
+        //TODO: handle hint unset
+        editText.onFocusChangeListener = this
+
         collapseLabel()
+    }
+
+    override fun onFocusChange(v: View?, hasFocus: Boolean) {
+        if (internalHint == null) return
+
+        if (internalHint != currentHint) {
+            hint = if (hasFocus) currentHint else ""
+        }
+
     }
 }
