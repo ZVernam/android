@@ -15,9 +15,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (plainText.isEmpty()) return EMPTY_STRING
 
         val passwordHash =
-            if (passwordText.isNotEmpty()) hash(passwordText)
-            else if (passwordHash.isNotEmpty()) passwordHash
-            else EMPTY_STRING
+            when {
+                passwordText.isNotEmpty() -> hash(passwordText)
+                passwordHash.isNotEmpty() -> passwordHash
+                else -> EMPTY_STRING
+            }
 
 
         val suffix = settings.suffix
