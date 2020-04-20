@@ -91,15 +91,11 @@ class MainActivity : AppCompatActivity() {
             settings.getDefaultPasswordHash(cipher)
         if (loadedPasswordHash != null) {
             mainViewModel.passwordHash = loadedPasswordHash
-            passwordText.setText("")
-            passwordText.hint = getString(R.string.default_password_hint)
-            passwordText.setHintTextColor(
+
+            passwordTextLayout.setInternalHint(
+                getString(R.string.default_password_hint),
                 ContextCompat.getColor(this, R.color.primaryTextColor)
             )
-            passwordTextLayout.collapseLabel()
-            passwordTextLayout.watchLabel()
-//            passwordTextLayout.isHintEnabled = false
-//            passwordTextLayout.
 
             updateTextValues()
         }
