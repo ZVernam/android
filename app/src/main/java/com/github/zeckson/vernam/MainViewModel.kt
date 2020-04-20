@@ -15,9 +15,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (plainText.isEmpty()) return EMPTY_STRING
 
         val passwordHash =
-            if (passwordHash.isNotEmpty() && settings.passwordState == SettingsWrapper.PasswordState.SET) {
-                passwordHash
-            } else if (passwordText.isEmpty()) EMPTY_STRING else hash(passwordText)
+            if (passwordText.isNotEmpty()) hash(passwordText)
+            else if (passwordHash.isNotEmpty()) passwordHash
+            else EMPTY_STRING
 
 
         val suffix = settings.suffix
