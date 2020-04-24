@@ -8,6 +8,12 @@
         android:key="@string/preference_is_hashed"
         android:title="Hash input value"
         app:iconSpaceReserved="false" />
+    <SwitchPreferenceCompat
+        android:key="@string/preference_is_casesensitive"
+        android:title="Do not lowercase inputs"
+        android:summaryOn="@string/preference_is_casesensitive_enabled"
+        android:summaryOff="@string/preference_is_casesensitive_disabled"
+        app:iconSpaceReserved="false" />
 
     <PreferenceCategory
         android:title="Security"

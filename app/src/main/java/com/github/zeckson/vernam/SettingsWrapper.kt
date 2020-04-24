@@ -17,6 +17,9 @@ class SettingsWrapper private constructor(
         SET
     }
 
+    val isCaseSensitive: Boolean
+        get() = preferences.getBoolean(getString(R.string.preference_is_casesensitive), false)
+
     val passwordState: PasswordState by lazy(LazyThreadSafetyMode.NONE, ::loadPasswordState)
 
     private fun loadPasswordState(): PasswordState {

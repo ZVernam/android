@@ -2,6 +2,7 @@ package com.github.zeckson.vernam
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import java.util.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -14,16 +15,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun generateCipherText(plainText: String, passwordText: String): String {
         if (plainText.isEmpty()) return EMPTY_STRING
 
+        val suffix = settings.suffix
+
+        var textWithToken = plainText + suffix
+        var plainPassword = passwordText
+
+        if (settings.isCaseSensitive) {
+            textWithToken = textWithToken.toLowerCase(Locale.getDefault())
+            plainPassword = plainPassword.toLowerCase(Locale.getDefault())
+        }
+
         val passwordHash =
             when {
-                passwordText.isNotEmpty() -> hash(passwordText)
+                plainPassword.isNotEmpty() -> hash(plainPassword)
                 passwordHash.isNotEmpty() -> passwordHash
                 else -> EMPTY_STRING
             }
 
-
-        val suffix = settings.suffix
-        val textWithToken = plainText + suffix
+        if (passwordHash.isEmpty()) return EMPTY_STRING
 
         val isHashed = settings.isHashed
 
