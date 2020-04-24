@@ -20,7 +20,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         var textWithToken = plainText + suffix
         var plainPassword = passwordText
 
-        if (settings.isCaseSensitive) {
+        if (!settings.isCaseSensitive) {
             textWithToken = textWithToken.toLowerCase(Locale.getDefault())
             plainPassword = plainPassword.toLowerCase(Locale.getDefault())
         }
