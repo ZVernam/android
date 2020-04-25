@@ -21,7 +21,7 @@
     <string name="preference_password">Password</string>
     <string name="preference_is_hashed">Hash input</string>
     <string name="preference_is_biometric">Ask save default</string>
-    <string name="preference_is_casesensitive">Case sensitive</string>
+    <string name="preference_is_casesensitive">Case sensitive input</string>
     <string name="preference_is_casesensitive_enabled">AbCd -> AbCd</string>
     <string name="preference_is_casesensitive_disabled">AbCd -> abcd</string>
 

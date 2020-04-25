@@ -10,7 +10,7 @@
         app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:key="@string/preference_is_casesensitive"
-        android:title="Do not lowercase inputs"
+        android:title="@string/preference_is_casesensitive"
         android:summaryOn="@string/preference_is_casesensitive_enabled"
         android:summaryOff="@string/preference_is_casesensitive_disabled"
         app:iconSpaceReserved="false" />
