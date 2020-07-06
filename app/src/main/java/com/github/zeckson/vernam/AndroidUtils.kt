@@ -46,6 +46,6 @@ fun Activity.setResultText(it: String?) {
     setResult(Activity.RESULT_OK, intent)
 }
 
-fun Context.showToast(text: String) {
+fun Context.showToast(text: CharSequence) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }

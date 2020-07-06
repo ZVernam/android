@@ -42,6 +42,12 @@ class BiometricEditTextPreference(
         }
     }
 
+    companion object {
+        private const val DIALOG_TAG = "BiometricPasswordDialog"
+        private const val TAG = "BiometricPasswordPreference"
+        private const val SAVE_STATE_TEXT = "BiometricPasswordDialog.text"
+    }
+
 
     override fun onAttached() {
         when (biometricStatus) {
@@ -94,11 +100,12 @@ class BiometricEditTextPreference(
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
                 Log.d(TAG, "$errorCode :: $errString")
+                context.showToast(errString)
             }
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
-                Log.d(TAG, "Authentication failed for an unknown reason")
+                Log.e(TAG, "Authentication failed for an unknown reason")
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -207,11 +214,5 @@ class BiometricEditTextPreference(
         }
 
 
-    }
-
-    companion object {
-        private const val DIALOG_TAG = "BiometricPasswordDialog"
-        private const val TAG = "BiometricPasswordPreference"
-        private const val SAVE_STATE_TEXT = "BiometricPasswordDialog.text"
     }
 }
