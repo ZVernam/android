@@ -49,7 +49,7 @@ class SettingsWrapper private constructor(
     }
 
     val isHashed: Boolean
-        get() = preferences.getBoolean(getString(R.string.preference_is_hashed), false)
+        get() = preferences.getBoolean(getString(R.string.preference_is_hashed), true)
 
     val isBiometricEnabled: Boolean
         get() {
