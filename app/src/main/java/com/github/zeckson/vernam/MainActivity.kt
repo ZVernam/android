@@ -51,15 +51,20 @@ class MainActivity : AppCompatActivity() {
             validateBiometrics()
         }
 
-        intent.getHost()?.let {
-            Log.i(TAG, "Received url from intent: $it")
-            myViewModel.plainTextValue = it
-        }
+        updateFromIntent(intent)
 
         plainText.setText(myViewModel.plainTextValue)
         passwordText.setText(myViewModel.password)
 
     }
+
+    private fun updateFromIntent(intent: Intent?) {
+        intent.getHost()?.let {
+            Log.i(TAG, "Received url from intent: $it")
+            mainViewModel.plainTextValue = it
+        }
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -128,6 +133,13 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         Log.v(TAG, "Destroyed...")
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.v(TAG, "On new intent...")
+        updateFromIntent(intent)
+    }
+
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo {
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
