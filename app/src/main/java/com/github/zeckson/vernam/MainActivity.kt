@@ -50,19 +50,15 @@ class MainActivity : AppCompatActivity() {
             validateBiometrics()
         }
 
-        updateFromIntent(intent)
+        intent.getHost()?.let {
+            Log.i(TAG, "Received url from intent: $it")
+            mainViewModel.plainTextValue = it
+        }
 
         plainText.setText(myViewModel.plainTextValue)
         passwordText.setText(myViewModel.password)
 
         updateTextValues()
-    }
-
-    private fun updateFromIntent(intent: Intent?) {
-        intent.getHost()?.let {
-            Log.i(TAG, "Received url from intent: $it")
-            mainViewModel.plainTextValue = it
-        }
     }
 
 
@@ -87,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         if (code != null) {
             val error = message ?: "Error code $code"
             showToast(error.toString())
+        }
+        if (mainViewModel.plainTextValue.isNotEmpty()) {
+            passwordText.requestFocus()
         }
         // Otherwise user cancelled, so no hash will be loaded
     }
@@ -212,7 +211,9 @@ class MainActivity : AppCompatActivity() {
         val plainText = plainText.text.toString()
         val password = passwordText.text.toString()
 
-        cipherText.setText(mainViewModel.generateCipherText(plainText, password))
+        val generateCipherText = mainViewModel.generateCipherText(plainText, password)
+        cipherText.setText(generateCipherText)
+        copyToClipboard.isEnabled = generateCipherText.isNotEmpty()
     }
 
 
