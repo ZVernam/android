@@ -30,20 +30,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.v(TAG, "Creating...")
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         restoreSavedState(savedInstanceState == null)
 
-        updateTextValues()
-
         setupListeners()
     }
 
     private fun restoreSavedState(newState: Boolean) {
         val withState = if (newState) "without" else "with"
-        Log.v(TAG, "Creating... ($withState) savedState)")
+        Log.v(TAG, "Restoring... ($withState savedState)")
 
         val myViewModel = mainViewModel
 
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         plainText.setText(myViewModel.plainTextValue)
         passwordText.setText(myViewModel.password)
 
+        updateTextValues()
     }
 
     private fun updateFromIntent(intent: Intent?) {
@@ -83,9 +83,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun onBiometricFail(code: Int?, messsage: CharSequence?) {
+    private fun onBiometricFail(code: Int?, message: CharSequence?) {
         if (code != null) {
-            val error = messsage ?: "Error code $code"
+            val error = message ?: "Error code $code"
             showToast(error.toString())
         }
         // Otherwise user cancelled, so no hash will be loaded
@@ -137,7 +137,9 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.v(TAG, "On new intent...")
-        updateFromIntent(intent)
+
+        setIntent(intent)
+        restoreSavedState(true)
     }
 
 
