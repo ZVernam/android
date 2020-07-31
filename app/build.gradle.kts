@@ -1,5 +1,9 @@
 @file:Suppress("LocalVariableName")
 
+apply(from = "version.gradle.kts")
+val version:String by project.extra
+val calculateVersionCode: (String) -> Int by project.extra
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -27,15 +31,24 @@ android {
 
     defaultConfig {
         applicationId = "com.github.zeckson.vernam"
+
         minSdkVersion(24)
         targetSdkVersion(29)
-        versionCode = 1
-        versionName = "1.0"
+
+        val myVersionCode = calculateVersionCode(version)
+        versionName = version
+        versionCode = myVersionCode
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        println("config code: $myVersionCode, name: $version")
     }
 
     buildTypes {
+
+        named("debug") {
+            versionNameSuffix = "-SNAPSHOT"
+        }
 
         // https://developer.android.com/studio/build/shrink-code
         named("release") {
