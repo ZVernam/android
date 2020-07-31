@@ -45,17 +45,21 @@ android {
     }
 
     signingConfigs {
-        create("release") {
+        val storeFilePath = property("release.keystore.file") as String?
 
-            storeFile = rootDir.resolve(property("release.keystore.file") as String)
-            storePassword = property("release.keystore.password") as String
-            keyAlias = property("release.key.alias") as String
-            keyPassword = property("release.key.password") as String
+        if(storeFilePath != null) {
+            create("release") {
+                storeFile = rootDir.resolve(storeFilePath)
+                storePassword = property("release.keystore.password") as String
+                keyAlias = property("release.key.alias") as String
+                keyPassword = property("release.key.password") as String
 
-            isV1SigningEnabled = true
-            isV2SigningEnabled = true
+                isV1SigningEnabled = true
+                isV2SigningEnabled = true
 
+            }
         }
+
     }
 
     buildTypes {
