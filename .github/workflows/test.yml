@@ -18,5 +18,12 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+
+      - name: Echo current actor
+        run: echo 'Current user is:' $GITHUB_ACTOR
+
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          USERNAME: ${{ env.GITHUB_ACTOR }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
