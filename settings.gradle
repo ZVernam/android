@@ -1,5 +1,5 @@
-rootProject.name = 'Vernam'
-include ':app'
+rootProject.name = "Vernam"
+include ":app"
 
 gradle.beforeProject {
     def localPropertiesFile = new File(rootDir.toString() + File.separator + "local.properties")

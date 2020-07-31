@@ -1,6 +1,6 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
 
 repositories {
     maven {
@@ -33,7 +33,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 
@@ -52,19 +52,19 @@ android {
 }
 
 dependencies {
-    def biometric_version = '1.0.1'
+    def biometric_version = "1.0.1"
     implementation "androidx.biometric:biometric:$biometric_version"
     implementation "androidx.appcompat:appcompat:$app_compat_version"
     implementation "androidx.preference:preference:1.1.1"
     implementation "androidx.security:security-crypto:1.1.0-alpha01"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "com.google.android.material:material:1.1.0"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 
     // Test libraries
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "androidx.test.ext:junit:1.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.2.0"
 
     def lifecycle_version = "2.2.0"
 
@@ -80,8 +80,8 @@ dependencies {
 
     // alternately - if using Java8, use the following instead of lifecycle-compiler
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
     // vernam library
-    implementation 'com.github.zeckson:vernam-tools:0.2.0'
+    implementation "com.github.zeckson:vernam-tools:0.2.0"
 }
