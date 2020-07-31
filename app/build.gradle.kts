@@ -45,7 +45,7 @@ android {
     }
 
     signingConfigs {
-        val storeFilePath = property("release.keystore.file") as String?
+        val storeFilePath = findProperty("release.keystore.file") as String?
 
         if(storeFilePath != null) {
             create("release") {
