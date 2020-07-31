@@ -19,6 +19,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.Preference.SummaryProvider
 import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
+import com.github.zeckson.VernamUtils
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(
@@ -172,7 +173,7 @@ class BiometricEditTextPreference(
         override fun onDialogClosed(positiveResult: Boolean) {
             if (positiveResult) {
                 val text = myEditText.text.toString()
-                val hashed = hash(text)
+                val hashed = VernamUtils.hash(text)
                 Log.v(TAG, "Saving password: $text")
                 Log.v(TAG, "Hashed: $hashed")
                 val encrypted = cipher?.let {

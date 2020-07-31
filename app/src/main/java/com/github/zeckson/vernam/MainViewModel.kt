@@ -2,6 +2,7 @@ package com.github.zeckson.vernam
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import com.github.zeckson.VernamUtils
 import java.util.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,7 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         val passwordHash =
             when {
-                plainPassword.isNotEmpty() -> hash(plainPassword)
+                plainPassword.isNotEmpty() -> VernamUtils.hash(plainPassword)
                 passwordHash.isNotEmpty() -> passwordHash
                 else -> EMPTY_STRING
             }
@@ -36,7 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         val isHashed = settings.isHashed
 
-        val generated = encrypt(if (isHashed) hash(textWithToken) else textWithToken, passwordHash)
+        val generated = VernamUtils.encrypt(if (isHashed) VernamUtils.hash(textWithToken) else textWithToken, passwordHash)
         val maxSize = textWithToken.length
 
         return generated.take(maxSize)
