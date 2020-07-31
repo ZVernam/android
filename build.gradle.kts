@@ -1,10 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext {
-        app_compat_version = "1.1.0"
-        kotlin_version = "1.3.72"
-    }
+    val kotlin_version by extra("1.3.72")
+    extra["app_compat_version"] = "1.1.0"
 
     repositories {
         google()
@@ -28,6 +26,6 @@ allprojects {
     }
 }
 
-task.register("clean", Delete::class) {
+tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
