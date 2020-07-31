@@ -36,6 +36,8 @@ android {
     }
 
     buildTypes {
+
+        // https://developer.android.com/studio/build/shrink-code
         named("release") {
             isMinifyEnabled = true
             proguardFiles(
