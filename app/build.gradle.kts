@@ -44,6 +44,20 @@ android {
         println("config code: $myVersionCode, name: $version")
     }
 
+    signingConfigs {
+        create("release") {
+
+            storeFile = rootDir.resolve(property("release.keystore.file") as String)
+            storePassword = property("release.keystore.password") as String
+            keyAlias = property("release.key.alias") as String
+            keyPassword = property("release.key.password") as String
+
+            isV1SigningEnabled = true
+            isV2SigningEnabled = true
+
+        }
+    }
+
     buildTypes {
 
         named("debug") {
@@ -53,10 +67,13 @@ android {
         // https://developer.android.com/studio/build/shrink-code
         named("release") {
             isMinifyEnabled = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
