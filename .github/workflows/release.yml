@@ -30,7 +30,7 @@ jobs:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Sign and build
+      - name: Sign build
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: app/build/outputs/apk/release
@@ -39,17 +39,20 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
+      - name: Rename file
+        run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/zvernam.apk
+
       - name: Publish builded artifact
         uses: actions/upload-artifact@v2
         with:
           name: release
-          path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          path: app/build/zvernam.apk
 
       - name: Upload to release
         uses: gacts/upload-to-release@master # https://github.com/actions-github/upload-to-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          file: app/build/zvernam.apk
           type: application/vnd.android.package-archive
 
