@@ -39,7 +39,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Publish builded acrtifact
+      - name: Publish builded artifact
         uses: actions/upload-artifact@v2
         with:
           name: release
