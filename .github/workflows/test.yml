@@ -23,7 +23,13 @@ jobs:
         run: echo 'Current user is:' $GITHUB_ACTOR
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew test
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish test result artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: app/build/reports/tests/testReleaseUnitTest
