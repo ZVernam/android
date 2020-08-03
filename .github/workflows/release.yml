@@ -2,7 +2,7 @@ name: Publish Artifacts
 
 on:
   release:
-    types: [created]
+    types: [created, edited] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
 
 jobs:
   release:
