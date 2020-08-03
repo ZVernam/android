@@ -1,6 +1,8 @@
 name: Publish Artifacts
 
-on: [push]
+on:
+  release:
+    types: [created]
 
 jobs:
   release:
@@ -42,4 +44,12 @@ jobs:
         with:
           name: release
           path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+
+      - name: Upload to release
+        uses: docker://gact/upload-to-release:latest # https://github.com/actions-github/upload-to-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          type: application/vnd.android.package-archive
 
