@@ -46,7 +46,7 @@ jobs:
           path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
 
       - name: Upload to release
-        uses: docker://gact/upload-to-release:latest # https://github.com/actions-github/upload-to-release
+        uses: gacts/upload-to-release@master # https://github.com/actions-github/upload-to-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
