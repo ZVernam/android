@@ -1,4 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Info on Gradle DSL https://docs.gradle.org/current/dsl/
 
 buildscript {
     val kotlin_version by extra("1.3.72")

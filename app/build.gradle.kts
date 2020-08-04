@@ -5,7 +5,7 @@ val version:String by project.extra
 val calculateVersionCode: (String) -> Int by project.extra
 
 plugins {
-    id("com.android.application")
+    id("com.android.application") // https://google.github.io/android-gradle-dsl/current/
     id("kotlin-android")
     id("kotlin-android-extensions")
 }
