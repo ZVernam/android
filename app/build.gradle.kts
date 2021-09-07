@@ -100,8 +100,7 @@ dependencies {
     implementation("androidx.biometric:biometric:$biometric_version")
 
     // App compat backward compatibility lib
-    val app_compat_version: String by rootProject.extra
-    implementation("androidx.appcompat:appcompat:$app_compat_version")
+    implementation("androidx.appcompat:appcompat:1.1.0")
 
     // AndroidX simplified preference manipulation
     implementation("androidx.preference:preference:1.1.1")
@@ -112,10 +111,6 @@ dependencies {
     // Material design UI libs
     implementation("com.google.android.material:material:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-
-    // Kotlin std lib
-    val kotlin_version: String by rootProject.extra
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version")
 
     // Test libraries
     testImplementation("junit:junit:4.12")
