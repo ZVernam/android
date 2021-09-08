@@ -1,7 +1,7 @@
 @file:Suppress("LocalVariableName")
 
 apply(from = "version.gradle.kts")
-val version:String by project.extra
+val version: String by project.extra
 val calculateVersionCode: (String) -> Int by project.extra
 
 plugins {
@@ -23,7 +23,7 @@ repositories {
 
 
 android {
-    compileSdkVersion(29)
+    compileSdk = 29
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -32,8 +32,8 @@ android {
     defaultConfig {
         applicationId = "com.github.zeckson.vernam"
 
-        minSdkVersion(24)
-        targetSdkVersion(29)
+        minSdk = 24
+        targetSdk = 29
 
         val myVersionCode = calculateVersionCode(version)
         versionName = version
@@ -47,15 +47,15 @@ android {
     signingConfigs {
         val storeFilePath = findProperty("release.keystore.file") as String?
 
-        if(storeFilePath != null) {
+        if (storeFilePath != null) {
             create("release") {
                 storeFile = rootDir.resolve(storeFilePath)
                 storePassword = property("release.keystore.password") as String
                 keyAlias = property("release.key.alias") as String
                 keyPassword = property("release.key.password") as String
 
-                isV1SigningEnabled = true
-                isV2SigningEnabled = true
+                enableV1Signing = true
+                enableV2Signing = true
 
             }
         }
@@ -96,8 +96,7 @@ android {
 
 dependencies {
     // Biometric module
-    val biometric_version = "1.0.1"
-    implementation("androidx.biometric:biometric:$biometric_version")
+    implementation("androidx.biometric:biometric:1.0.1")
 
     // App compat backward compatibility lib
     implementation("androidx.appcompat:appcompat:1.1.0")
@@ -134,5 +133,5 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     // vernam library
-    implementation("com.github.zeckson:vernam-tools:0.2.0")
+    implementation("com.github.zeckson:vernam-tools:0.3.0")
 }
