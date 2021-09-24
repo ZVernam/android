@@ -142,8 +142,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun createPromptInfo(): BiometricPrompt.PromptInfo {
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+    private fun createPromptInfo(): BiometricPrompt.PromptInfo =
+        BiometricPrompt.PromptInfo.Builder()
             .setTitle(getString(R.string.prompt_info_title))
             .setSubtitle(getString(R.string.prompt_info_subtitle))
             .setDescription(getString(R.string.prompt_info_description))
@@ -153,8 +153,6 @@ class MainActivity : AppCompatActivity() {
             // Also note that setDeviceCredentialAllowed and setNegativeButtonText are
             // incompatible so that if you uncomment one you must comment out the other
             .build()
-        return promptInfo
-    }
 
 
     private fun createBiometricPrompt(
