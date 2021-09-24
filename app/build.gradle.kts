@@ -23,7 +23,7 @@ repositories {
 
 
 android {
-    compileSdk = 29
+    compileSdk = 30
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -33,7 +33,7 @@ android {
         applicationId = "com.github.zeckson.vernam"
 
         minSdk = 24
-        targetSdk = 29
+        targetSdk = 30
 
         val myVersionCode = calculateVersionCode(version)
         versionName = version
