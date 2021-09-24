@@ -102,7 +102,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
 
     // AndroidX simplified preference manipulation
-    implementation("androidx.preference:preference:1.1.1")
+    implementation("androidx.preference:preference-ktx:1.1.1")
 
     // AndroidX security lib
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
