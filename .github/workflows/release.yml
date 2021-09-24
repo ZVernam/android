@@ -26,6 +26,7 @@ jobs:
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.event.release.tag_name }}
 
       - name: Sign build
         uses: r0adkll/sign-android-release@v1
