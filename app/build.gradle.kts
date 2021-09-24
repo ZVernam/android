@@ -96,25 +96,25 @@ android {
 
 dependencies {
     // Biometric module
-    implementation("androidx.biometric:biometric:1.0.1")
+    implementation("androidx.biometric:biometric:1.1.0")
 
     // App compat backward compatibility lib
-    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.appcompat:appcompat:1.3.1")
 
     // AndroidX simplified preference manipulation
     implementation("androidx.preference:preference:1.1.1")
 
     // AndroidX security lib
-    implementation("androidx.security:security-crypto:1.1.0-alpha01")
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
 
     // Material design UI libs
-    implementation("com.google.android.material:material:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
 
     // Test libraries
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     val lifecycle_version = "2.2.0"
 
