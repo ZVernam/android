@@ -46,7 +46,7 @@ class BiometricEditTextPreference(
     companion object {
         private const val DIALOG_TAG = "BiometricPasswordDialog"
         private const val TAG = "BiometricPasswordPreference"
-        private const val SAVE_STATE_TEXT = "BiometricPasswordDialog.text"
+
     }
 
 
@@ -135,6 +135,9 @@ class BiometricEditTextPreference(
     }
 
     class BiometricPasswordDialog(val cipher: Cipher?) : PreferenceDialogFragmentCompat() {
+        companion object {
+            private const val SAVE_STATE_TEXT = "BiometricPasswordDialog.text"
+        }
 
         private lateinit var myEditText: EditText
         private lateinit var mText: CharSequence
