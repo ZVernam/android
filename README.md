@@ -1,6 +1,28 @@
 # Vernam Android Password Generator
 Android App for password generation. See [details](https://github.com/ZVernam/vernam-cipher)
 
+### Description:
+This is password generator, which allows you to generate unique passwords on the fly.
+
+How does it work?
+1. You enter some key which you'd like to generate unique password for.
+2. Enter you base secret password
+3. Copy generated unique password, which is not encryptable Vernam Cipher combination of previous 2 strings.
+
+Features:
+- Store password encrypted with you biometrics
+- Accepts any url from any application
+- Strips domain name from url
+- Optionally can add any suffix to your input string as a salt
+
+### Release Notes
+- [v1.0.0](https://github.com/ZVernam/android/releases/tag/v1.0.0)
+  - initial release
+- v1.0.0 - [v1.0.4](https://github.com/ZVernam/android/releases/tag/v1.0.4)
+  - fix day theme
+  - update lib versions
+  - update SDK version
+
 ### Links:
 - [Awesome asset studio](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&foreground.space.trim=1&foreground.space.pad=0&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(30%2C%2080%2C%2032)&crop=0&backgroundShape=circle&effects=elevate&name=ic_launcher_round)
 - [Overlap Activities](https://stackoverflow.com/questions/7878235/overlay-an-activity-on-another-activity-or-overlay-a-view-over-another)
@@ -10,3 +32,4 @@ Android App for password generation. See [details](https://github.com/ZVernam/ve
   - https://developer.android.com/reference/android/app/KeyguardManager#createConfirmDeviceCredentialIntent(java.lang.CharSequence,%20java.lang.CharSequence)
   - https://developer.android.com/training/sign-in/biometric-auth
 - [Android Material Components](https://material.io/develop/android/components/text-fields/)
+- [Android DayNight Theme Control](https://medium.com/androiddevelopers/appcompat-v23-2-daynight-d10f90c83e94)
