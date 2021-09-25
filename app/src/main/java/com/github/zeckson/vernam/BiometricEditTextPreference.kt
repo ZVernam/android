@@ -61,12 +61,13 @@ class BiometricEditTextPreference(
 
     fun showBiometricPrompt(caller: PreferenceFragmentCompat): Boolean {
         if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED) {
-            caller.startActivityForResult(Intent(Settings.ACTION_SECURITY_SETTINGS), 0)
+            // If user hasn't setup biometrics in settings, then show this settings
+            caller.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
         }
 
         val settings = SettingsWrapper.get(context)
         val state = settings.passwordState
-        if (state == SettingsWrapper.PasswordState.RESET) {
+        if (state == SettingsWrapper.PasswordState.RESET || state == SettingsWrapper.PasswordState.NOT_SET) {
             // Refresh key if state was invalidated
             text = ""
             refreshKey()
