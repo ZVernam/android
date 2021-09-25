@@ -21,12 +21,15 @@ jobs:
       - name: Echo current actor
         run: echo 'Current user is:' $GITHUB_ACTOR
 
+      - name: Print current version
+        run: echo 'Current version:' ${{ github.event.release.tag_name }}
+
       - name: Assemble Release with Gradle
         run: ./gradlew assembleRelease
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.event.release.tag_name }}
+          PROJECT_VERSION: ${{ github.event.release.tag_name }}
 
       - name: Sign build
         uses: r0adkll/sign-android-release@v1
