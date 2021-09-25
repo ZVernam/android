@@ -22,6 +22,9 @@ Features:
   - fix day theme
   - update lib versions
   - update SDK version
+- v1.0.4 - [v1.0.5](https://github.com/ZVernam/android/releases/tag/v1.0.5)
+  - update icons
+  - some minor code cleanup
 
 ### Links:
 - [Awesome asset studio](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&foreground.space.trim=1&foreground.space.pad=0&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(30%2C%2080%2C%2032)&crop=0&backgroundShape=circle&effects=elevate&name=ic_launcher_round)
