@@ -28,7 +28,7 @@ class BiometricEditTextPreference(
 ) :
     EditTextPreference(context, attrs) {
     private val biometricStatus: Int
-        get() = from(context).canAuthenticate()
+        get() = from(context).canAuthenticate(Authenticators.BIOMETRIC_STRONG)
 
     init {
         this.summaryProvider = SummaryProvider<EditTextPreference> {
