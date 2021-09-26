@@ -51,7 +51,7 @@ class SettingsActivity : AppCompatActivity(),
             val biometricSwitchPreference =
                 findPreference<SwitchPreferenceCompat>(getString(R.string.preference_is_biometric))
             biometricSwitchPreference?.let {
-                when (BiometricManager.from(context).canAuthenticate()) {
+                when (context.biometricStatus) {
                     BiometricManager.BIOMETRIC_SUCCESS -> {
                         it.isVisible = true
                     }

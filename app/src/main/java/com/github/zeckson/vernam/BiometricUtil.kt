@@ -1,8 +1,10 @@
 package com.github.zeckson.vernam
 
+import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
+import androidx.biometric.BiometricManager
 import java.io.IOException
 import java.security.InvalidAlgorithmParameterException
 import java.security.KeyStore
@@ -19,6 +21,11 @@ private const val DEFAULT_KEY_NAME = "default_key"
 
 private const val CIPHER_STRING =
     "${KeyProperties.KEY_ALGORITHM_AES}/${KeyProperties.BLOCK_MODE_CBC}/${KeyProperties.ENCRYPTION_PADDING_PKCS7}"
+
+val Context.biometricStatus: Int
+    get() = BiometricManager.from(this)
+        .canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+
 
 fun setupInitedEncryptCipher(): Cipher? {
     val cipher = Cipher.getInstance(CIPHER_STRING)
