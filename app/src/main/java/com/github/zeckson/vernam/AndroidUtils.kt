@@ -37,7 +37,7 @@ fun EditText.onTextChanged(block: () -> Unit) {
 fun Activity.setTextToClipBoard(text: String?) {
     val clipboard: ClipboardManager =
         this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboard.setPrimaryClip(ClipData.newPlainText("Text copied!", text))
+    clipboard.setPrimaryClip(ClipData.newPlainText("zvernam", text))
 }
 
 fun Activity.setResultText(it: String?) {
