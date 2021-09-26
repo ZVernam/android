@@ -1,4 +1,4 @@
-package com.github.zeckson.vernam
+package com.github.zeckson.vernam.settings
 
 import android.content.Context
 import android.content.DialogInterface
@@ -20,6 +20,7 @@ import androidx.preference.Preference.SummaryProvider
 import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
 import com.github.zeckson.VernamUtils
+import com.github.zeckson.vernam.R
 import com.github.zeckson.vernam.util.biometricStatus
 import com.github.zeckson.vernam.util.refreshKey
 import com.github.zeckson.vernam.util.setupInitedEncryptCipher

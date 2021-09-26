@@ -25,7 +25,7 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
-        <com.github.zeckson.vernam.BiometricEditTextPreference
+        <com.github.zeckson.vernam.settings.BiometricEditTextPreference
             android:key="@string/preference_password"
             android:title="Default password"
             android:summary="Set default password if necessary"

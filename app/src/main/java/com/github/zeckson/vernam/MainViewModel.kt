@@ -3,7 +3,7 @@ package com.github.zeckson.vernam
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.github.zeckson.VernamUtils
-import java.util.*
+import com.github.zeckson.vernam.settings.SettingsWrapper
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 

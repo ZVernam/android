@@ -1,10 +1,11 @@
-package com.github.zeckson.vernam
+package com.github.zeckson.vernam.settings
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceManager
+import com.github.zeckson.vernam.R
 import com.github.zeckson.vernam.util.biometricStatus
 import com.github.zeckson.vernam.util.setupInitedDecryptCipher
 import javax.crypto.Cipher

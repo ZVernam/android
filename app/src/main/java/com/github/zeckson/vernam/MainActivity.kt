@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import javax.crypto.Cipher
 import com.github.zeckson.vernam.databinding.ActivityLayoutBinding
 import com.github.zeckson.vernam.databinding.InputsLayoutBinding
+import com.github.zeckson.vernam.settings.SettingsActivity
+import com.github.zeckson.vernam.settings.SettingsWrapper
 import com.github.zeckson.vernam.util.*
 
 

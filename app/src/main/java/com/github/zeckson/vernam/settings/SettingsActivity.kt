@@ -1,4 +1,4 @@
-package com.github.zeckson.vernam
+package com.github.zeckson.vernam.settings
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,6 +9,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import com.github.zeckson.vernam.R
 import com.github.zeckson.vernam.util.biometricStatus
 
 class SettingsActivity : AppCompatActivity(),
