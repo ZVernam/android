@@ -63,6 +63,7 @@ class BiometricEditTextPreference(
         if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED) {
             // If user hasn't setup biometrics in settings, then show this settings
             caller.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS))
+            return false
         }
 
         val settings = SettingsWrapper.get(context)
