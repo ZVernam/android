@@ -22,8 +22,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         var plainPassword = passwordText
 
         if (!settings.isCaseSensitive) {
-            textWithToken = textWithToken.toLowerCase(Locale.getDefault())
-            plainPassword = plainPassword.toLowerCase(Locale.getDefault())
+            textWithToken = textWithToken.lowercase()
+            plainPassword = plainPassword.lowercase()
         }
 
         val passwordHash =
