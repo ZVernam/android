@@ -44,3 +44,4 @@ Features:
 - [Android DayNight Theme Control](https://medium.com/androiddevelopers/appcompat-v23-2-daynight-d10f90c83e94)
 - [Android View Binding](https://developer.android.com/topic/libraries/view-binding)
 - [Android View Binding Caveats](https://betterprogramming.pub/exploring-viewbinding-in-depth-598925821e41)
+- [Dark Theming](https://developer.android.com/guide/topics/ui/look-and-feel/darktheme)
