@@ -20,6 +20,10 @@ import androidx.preference.Preference.SummaryProvider
 import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
 import com.github.zeckson.VernamUtils
+import com.github.zeckson.vernam.util.biometricStatus
+import com.github.zeckson.vernam.util.refreshKey
+import com.github.zeckson.vernam.util.setupInitedEncryptCipher
+import com.github.zeckson.vernam.util.showToast
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(

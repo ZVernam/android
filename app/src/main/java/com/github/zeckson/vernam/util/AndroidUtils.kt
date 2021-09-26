@@ -1,4 +1,4 @@
-package com.github.zeckson.vernam
+package com.github.zeckson.vernam.util
 
 import android.app.Activity
 import android.content.ClipData

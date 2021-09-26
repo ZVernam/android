@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import javax.crypto.Cipher
 import com.github.zeckson.vernam.databinding.ActivityLayoutBinding
 import com.github.zeckson.vernam.databinding.InputsLayoutBinding
+import com.github.zeckson.vernam.util.*
 
 
 class MainActivity : AppCompatActivity() {

@@ -1,5 +1,6 @@
 package com.github.zeckson.vernam
 
+import com.github.zeckson.vernam.util.stripUrlToHost
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

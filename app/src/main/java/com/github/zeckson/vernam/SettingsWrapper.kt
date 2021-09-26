@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.util.Base64
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceManager
+import com.github.zeckson.vernam.util.biometricStatus
+import com.github.zeckson.vernam.util.setupInitedDecryptCipher
 import javax.crypto.Cipher
 
 class SettingsWrapper private constructor(
