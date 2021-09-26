@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.inputs_layout.*
 import javax.crypto.Cipher
+import com.github.zeckson.vernam.databinding.ActivityLayoutBinding
+import com.github.zeckson.vernam.databinding.InputsLayoutBinding
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,13 +27,19 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
+    private lateinit var mainBinding: ActivityLayoutBinding
+    private lateinit var inputBinding: InputsLayoutBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.v(TAG, "Creating...")
 
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        mainBinding = ActivityLayoutBinding.inflate(layoutInflater)
+        inputBinding = InputsLayoutBinding.inflate(layoutInflater, mainBinding.root)
+        setContentView(mainBinding.root)
+
+        setSupportActionBar(mainBinding.toolbar)
 
         restoreSavedState(savedInstanceState == null)
 
@@ -55,8 +61,8 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.plainTextValue = it
         }
 
-        plainText.setText(myViewModel.plainTextValue)
-        passwordText.setText(myViewModel.password)
+        inputBinding.plainText.setText(myViewModel.plainTextValue)
+        inputBinding.passwordText.setText(myViewModel.password)
 
         updateTextValues()
     }
@@ -66,8 +72,8 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         Log.v(TAG, "Saving state...")
 
-        mainViewModel.password = passwordText.text.toString()
-        mainViewModel.plainTextValue = plainText.text.toString()
+        mainViewModel.password = inputBinding.passwordText.text.toString()
+        mainViewModel.plainTextValue = inputBinding.plainText.text.toString()
     }
 
     private fun validateBiometrics() {
@@ -85,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             showToast(error.toString())
         }
         if (mainViewModel.plainTextValue.isNotEmpty()) {
-            passwordText.requestFocus()
+            inputBinding.passwordText.requestFocus()
         }
         // Otherwise user cancelled, so no hash will be loaded
     }
@@ -96,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         if (loadedPasswordHash != null) {
             mainViewModel.passwordHash = loadedPasswordHash
 
-            passwordTextLayout.setInternalHint(
+            inputBinding.passwordTextLayout.setInternalHint(
                 getString(R.string.default_password_hint),
                 ContextCompat.getColor(this, R.color.primaryTextColor)
             )
@@ -109,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         Log.v(TAG, "Starting...")
 
-        plainText.requestFocus()
+        inputBinding.plainText.requestFocus()
     }
 
 
@@ -188,11 +194,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListeners() {
 
-        plainText.onTextChanged(::updateTextValues)
-        passwordText.onTextChanged(::updateTextValues)
+        inputBinding.plainText.onTextChanged(::updateTextValues)
+        inputBinding.passwordText.onTextChanged(::updateTextValues)
 
-        copyToClipboard.setOnClickListener {
-            val text = cipherText.text.toString()
+        mainBinding.copyToClipboard.setOnClickListener {
+            val text = inputBinding.cipherText.text.toString()
             if (text.isEmpty()) return@setOnClickListener
 
             this.setTextToClipBoard(text)
@@ -206,12 +212,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateTextValues() {
 
-        val plainText = plainText.text.toString()
-        val password = passwordText.text.toString()
+        val plainText = inputBinding.plainText.text.toString()
+        val password = inputBinding.passwordText.text.toString()
 
         val generateCipherText = mainViewModel.generateCipherText(plainText, password)
-        cipherText.setText(generateCipherText)
-        copyToClipboard.isEnabled = generateCipherText.isNotEmpty()
+        inputBinding.cipherText.setText(generateCipherText)
+        mainBinding.copyToClipboard.isEnabled = generateCipherText.isNotEmpty()
     }
 
 

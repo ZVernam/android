@@ -7,7 +7,6 @@ val calculateVersionCode: (String) -> Int by project.extra
 plugins {
     id("com.android.application") // https://google.github.io/android-gradle-dsl/current/
     id("kotlin-android")
-    id("kotlin-android-extensions")
 }
 
 repositories {
@@ -23,6 +22,10 @@ repositories {
 
 
 android {
+    buildFeatures {
+        viewBinding = true
+    }
+
     compileSdk = 30
 
     testOptions {
