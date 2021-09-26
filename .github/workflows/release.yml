@@ -1,8 +1,11 @@
 name: Publish Artifacts
 
 on:
-  release:
-    types: [released] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
+#  release:
+#    types: [ released ] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
+  push:
+    tags:
+      - '*' # build on any tag
 
 jobs:
   release:
@@ -50,10 +53,11 @@ jobs:
           path: app/build/zvernam.apk
 
       - name: Upload to release
-        uses: gacts/upload-to-release@master # https://github.com/actions-github/upload-to-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: svenstaro/upload-release-action@v2
         with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: app/build/zvernam.apk
-          type: application/vnd.android.package-archive
-
+          asset_name: zvernam-${{ github.event.release.tag_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Release "${{ github.event.release.tag_name }}
