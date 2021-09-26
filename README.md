@@ -36,3 +36,5 @@ Features:
   - https://developer.android.com/training/sign-in/biometric-auth
 - [Android Material Components](https://material.io/develop/android/components/text-fields/)
 - [Android DayNight Theme Control](https://medium.com/androiddevelopers/appcompat-v23-2-daynight-d10f90c83e94)
+- [Android View Binding](https://developer.android.com/topic/libraries/view-binding)
+- [Android View Binding Caveats](https://betterprogramming.pub/exploring-viewbinding-in-depth-598925821e41)
