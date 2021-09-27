@@ -166,7 +166,7 @@ class BiometricEditTextPreference(
             if (mText.isNotEmpty()) {
                 myEditText.setHint(R.string.password_not_changed)
                 myEditText.setHintTextColor(
-                    requireContext().themeColor(R.attr.colorControlActivated)
+                    requireContext().themeColor(R.attr.colorAccent)
                 )
             } else {
                 myEditText.setText(mText)
