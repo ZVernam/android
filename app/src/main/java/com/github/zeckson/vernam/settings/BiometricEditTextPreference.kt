@@ -9,10 +9,13 @@ import android.text.InputType
 import android.util.AttributeSet
 import android.util.Base64
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
+import androidx.annotation.AttrRes
 import androidx.appcompat.app.AlertDialog
-import androidx.biometric.BiometricManager.*
+import androidx.biometric.BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+import androidx.biometric.BiometricManager.BIOMETRIC_SUCCESS
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.preference.EditTextPreference
@@ -21,10 +24,7 @@ import androidx.preference.PreferenceDialogFragmentCompat
 import androidx.preference.PreferenceFragmentCompat
 import com.github.zeckson.VernamUtils
 import com.github.zeckson.vernam.R
-import com.github.zeckson.vernam.util.biometricStatus
-import com.github.zeckson.vernam.util.refreshKey
-import com.github.zeckson.vernam.util.setupInitedEncryptCipher
-import com.github.zeckson.vernam.util.showToast
+import com.github.zeckson.vernam.util.*
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(
@@ -158,7 +158,6 @@ class BiometricEditTextPreference(
             mText = text ?: ""
         }
 
-
         override fun onBindDialogView(view: View) {
             super.onBindDialogView(view)
 
@@ -167,10 +166,7 @@ class BiometricEditTextPreference(
             if (mText.isNotEmpty()) {
                 myEditText.setHint(R.string.password_not_changed)
                 myEditText.setHintTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.primaryTextColor
-                    )
+                    requireContext().themeColor(R.attr.colorControlActivated)
                 )
             } else {
                 myEditText.setText(mText)

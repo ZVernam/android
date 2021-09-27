@@ -7,8 +7,16 @@ import android.content.Context
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.AttrRes
+
+fun Context.themeColor(@AttrRes attrRes: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(attrRes, typedValue, true)
+    return typedValue.data
+}
 
 fun Intent?.getHost(): String? {
     when (this?.action) {
