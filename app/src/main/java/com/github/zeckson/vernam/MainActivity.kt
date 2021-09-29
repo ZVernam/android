@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -16,7 +15,6 @@ import com.github.zeckson.vernam.databinding.InputsLayoutBinding
 import com.github.zeckson.vernam.settings.SettingsActivity
 import com.github.zeckson.vernam.settings.SettingsWrapper
 import com.github.zeckson.vernam.util.*
-import com.google.android.material.color.MaterialColors
 
 
 class MainActivity : AppCompatActivity() {
