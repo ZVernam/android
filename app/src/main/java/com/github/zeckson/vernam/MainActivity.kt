@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         Log.v(TAG, "Creating...")
 
         mainBinding = ActivityLayoutBinding.inflate(layoutInflater)
-        inputBinding = InputsLayoutBinding.inflate(layoutInflater)
+        inputBinding = mainBinding.main
         setContentView(mainBinding.root)
 
         setSupportActionBar(mainBinding.toolbar)
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         intent.getHost()?.let {
             Log.i(TAG, "Received url from intent: $it")
-            mainViewModel.plainTextValue = it
+            myViewModel.plainTextValue = it
         }
 
         inputBinding.plainText.setText(myViewModel.plainTextValue)
