@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         Log.v(TAG, "Creating...")
 
         mainBinding = ActivityLayoutBinding.inflate(layoutInflater)
-        inputBinding = InputsLayoutBinding.inflate(layoutInflater, mainBinding.root)
+        inputBinding = InputsLayoutBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
         setSupportActionBar(mainBinding.toolbar)
@@ -201,7 +201,7 @@ class MainActivity : AppCompatActivity() {
         inputBinding.plainText.onTextChanged(::updateTextValues)
         inputBinding.passwordText.onTextChanged(::updateTextValues)
 
-        mainBinding.copyToClipboard.setOnClickListener {
+        inputBinding.copyToClipboard.setOnClickListener {
             val text = inputBinding.cipherText.text.toString()
             if (text.isEmpty()) return@setOnClickListener
 
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity() {
 
         val generateCipherText = mainViewModel.generateCipherText(plainText, password)
         inputBinding.cipherText.setText(generateCipherText)
-        mainBinding.copyToClipboard.isEnabled = generateCipherText.isNotEmpty()
+        inputBinding.copyToClipboard.isEnabled = generateCipherText.isNotEmpty()
     }
 
 
