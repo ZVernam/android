@@ -1,10 +1,8 @@
 package com.github.zeckson.vernam.settings
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
-import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -50,19 +48,16 @@ class SettingsActivity : AppCompatActivity(),
         }
 
         private fun setupBiometric() {
-            val biometricSwitchPreference =
-                findPreference<SwitchPreferenceCompat>(getString(R.string.preference_save_password_id))
-            biometricSwitchPreference?.let {
-                when (context?.biometricStatus) {
-                    BiometricManager.BIOMETRIC_SUCCESS -> {
-                        it.isVisible = true
-                    }
-                    else -> {
-                        // nothing
-                    }
+            when (context?.biometricStatus) {
+                BiometricManager.BIOMETRIC_SUCCESS -> {
+                    val it =
+                        findPreference<SwitchPreferenceCompat>(getString(R.string.preference_save_password_id))
+                    it?.isVisible = true
+                }
+                else -> {
+                    // nothing
                 }
             }
-
         }
 
     }
