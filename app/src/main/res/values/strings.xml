@@ -17,13 +17,19 @@
     <string name="copy_to_clipboard_button">Copy to clipboard</string>
 
     //Preferences
-    <string name="preference_suffix">Suffix</string>
-    <string name="preference_password">Password</string>
-    <string name="preference_is_hashed">Hash input</string>
-    <string name="preference_is_biometric">Ask save default</string>
+    <string name="preference_suffix_title">Default suffix</string>
+
+    <string name="preference_password_title">Default password</string>
+
+    <string name="preference_is_hashed_title">Hash input value</string>
+
     <string name="preference_is_casesensitive">Case sensitive input</string>
     <string name="preference_is_casesensitive_enabled">AbCd -> AbCd</string>
     <string name="preference_is_casesensitive_disabled">AbCd -> abcd</string>
+    <string name="preference_password_summary">Set default password if necessary</string>
+    <string name="preference_save_password_summary">Ask whether to save password on change</string>
+    <string name="preference_save_password_title">Save on change</string>
+
 
     // Biometric prompt
     <string name="prompt_info_title">Verify</string>
@@ -34,5 +40,6 @@
     <string name="password_not_changed">[unchanged]</string>
     <string name="clear_default_password">Clear</string>
     <string name="default_password_hint">[default password]</string>
+    <string name="preference_version_title">Version</string>
 
 </resources>

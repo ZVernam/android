@@ -1,14 +1,12 @@
 package com.github.zeckson.vernam.settings
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreferenceCompat
+import com.github.zeckson.vernam.BuildConfig
 import com.github.zeckson.vernam.R
 import com.github.zeckson.vernam.util.biometricStatus
 
@@ -35,34 +33,31 @@ class SettingsActivity : AppCompatActivity(),
 
     class SettingsFragment : PreferenceFragmentCompat() {
 
-        lateinit var defaultPreference: SharedPreferences
-
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preference, rootKey)
 
-            val context = context
-            if (context != null) {
-                defaultPreference = PreferenceManager.getDefaultSharedPreferences(context)
-
-                setupBiometric(context)
-            }
-
+            setupBiometric()
+            setupVersion()
         }
 
-        private fun setupBiometric(context: Context) {
-            val biometricSwitchPreference =
-                findPreference<SwitchPreferenceCompat>(getString(R.string.preference_is_biometric))
-            biometricSwitchPreference?.let {
-                when (context.biometricStatus) {
-                    BiometricManager.BIOMETRIC_SUCCESS -> {
-                        it.isVisible = true
-                    }
-                    else -> {
-                        // nothing
-                    }
+        private fun setupVersion() {
+            val appVersion =
+                findPreference<Preference>(getString(R.string.preference_version_id))
+
+            appVersion?.summary = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+        }
+
+        private fun setupBiometric() {
+            when (context?.biometricStatus) {
+                BiometricManager.BIOMETRIC_SUCCESS -> {
+                    val it =
+                        findPreference<SwitchPreferenceCompat>(getString(R.string.preference_save_password_id))
+                    it?.isVisible = true
+                }
+                else -> {
+                    // nothing
                 }
             }
-
         }
 
     }

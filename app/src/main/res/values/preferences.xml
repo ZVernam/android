@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //ids
+    <string name="preference_version_id">version</string>
+    <string name="preference_suffix_id">suffix</string>
+    <string name="preference_password_id">password</string>
+    <string name="preference_is_hashed_id">isHashed</string>
+    <string name="preference_save_password_id">saveBiometric</string>
+    <string name="preference_is_case_sensitive_id">isCaseSensitive</string>
+</resources>
