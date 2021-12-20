@@ -44,14 +44,14 @@ class SettingsWrapper private constructor(
     }
 
     private fun getEncodedPassword() =
-        preferences.getString(getString(R.string.preference_password), null)
+        preferences.getString(getString(R.string.preference_password_title), null)
 
     private fun getString(resId: Int): String {
         return context.getString(resId)
     }
 
     val isHashed: Boolean
-        get() = preferences.getBoolean(getString(R.string.preference_is_hashed), true)
+        get() = preferences.getBoolean(getString(R.string.preference_is_hashed_title), true)
 
 
     private fun getEncodedPasswordAndIv(): Pair<ByteArray, ByteArray>? {
@@ -79,7 +79,7 @@ class SettingsWrapper private constructor(
 
 
     val suffix: String
-        get() = preferences.getString(getString(R.string.preference_suffix), EMPTY_STRING)!!
+        get() = preferences.getString(getString(R.string.preference_suffix_title), EMPTY_STRING)!!
 
     companion object {
         private const val EMPTY_STRING = ""

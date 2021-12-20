@@ -5,14 +5,15 @@
     android:layout_height="match_parent">
 
     <SwitchPreferenceCompat
-        android:key="@string/preference_is_hashed"
-        android:title="Hash input value"
+        android:key="@string/preference_is_hashed_id"
+        android:title="@string/preference_is_hashed_title"
         app:iconSpaceReserved="false" />
+
     <SwitchPreferenceCompat
-        android:key="@string/preference_is_casesensitive"
-        android:title="@string/preference_is_casesensitive"
-        android:summaryOn="@string/preference_is_casesensitive_enabled"
+        android:key="@string/preference_is_case_sensitive_id"
         android:summaryOff="@string/preference_is_casesensitive_disabled"
+        android:summaryOn="@string/preference_is_casesensitive_enabled"
+        android:title="@string/preference_is_casesensitive"
         app:iconSpaceReserved="false" />
 
     <PreferenceCategory
@@ -20,27 +21,45 @@
         app:iconSpaceReserved="false">
 
         <EditTextPreference
-            android:key="@string/preference_suffix"
-            android:title="Default suffix"
+            android:key="@string/preference_suffix_id"
+            android:title="@string/preference_suffix_title"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
 
         <com.github.zeckson.vernam.settings.BiometricEditTextPreference
-            android:key="@string/preference_password"
-            android:title="Default password"
-            android:summary="Set default password if necessary"
+            android:key="@string/preference_password_id"
+            android:summary="@string/preference_password_summary"
+            android:title="@string/preference_password_title"
             app:dialogLayout="@layout/password_dialog"
             app:iconSpaceReserved="false"
             app:isPreferenceVisible="false"
             app:useSimpleSummaryProvider="false" />
 
         <SwitchPreferenceCompat
-            android:key="@string/preference_is_biometric"
-            android:title="Save on change"
-            android:summary="Ask whether to save password on change"
+            android:key="@string/preference_save_password_id"
+            android:title="@string/preference_save_password_title"
+            android:summary="@string/preference_save_password_summary"
             android:defaultValue="true"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+    <PreferenceCategory
+        android:title="Version"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="@string/preference_version_id"
+            android:title="@string/preference_version_title"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://zvernam.github.io/" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+    </PreferenceScreen>
