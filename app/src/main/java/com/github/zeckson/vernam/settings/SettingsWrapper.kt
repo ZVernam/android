@@ -21,7 +21,7 @@ class SettingsWrapper private constructor(
     }
 
     val isCaseSensitive: Boolean
-        get() = preferences.getBoolean(getString(R.string.preference_is_casesensitive), false)
+        get() = preferences.getBoolean(getString(R.string.preference_is_case_sensitive_id), false)
 
     val passwordState: PasswordState by lazy(LazyThreadSafetyMode.NONE, ::loadPasswordState)
 
@@ -30,8 +30,7 @@ class SettingsWrapper private constructor(
         val passwordIV = getPasswordIV() ?: return PasswordState.NOT_SET
 
         // Password set, but biometric was disabled or gone(((
-        if (context.biometricStatus != BiometricManager.BIOMETRIC_SUCCESS
-        ) return PasswordState.RESET
+        if (context.biometricStatus != BiometricManager.BIOMETRIC_SUCCESS) return PasswordState.RESET
 
         // Password is set, but invalidated (due biometrics param change)
         val cipher = setupInitedDecryptCipher(passwordIV)
@@ -44,7 +43,7 @@ class SettingsWrapper private constructor(
     }
 
     private fun getEncodedPassword() =
-        preferences.getString(getString(R.string.preference_password_title), null)
+        preferences.getString(getString(R.string.preference_password_id), null)
 
     private fun getString(resId: Int): String {
         return context.getString(resId)
@@ -79,12 +78,11 @@ class SettingsWrapper private constructor(
 
 
     val suffix: String
-        get() = preferences.getString(getString(R.string.preference_suffix_title), EMPTY_STRING)!!
+        get() = preferences.getString(getString(R.string.preference_suffix_id), EMPTY_STRING)!!
 
     companion object {
         private const val EMPTY_STRING = ""
-        fun get(ctx: Context): SettingsWrapper {
-            return SettingsWrapper(PreferenceManager.getDefaultSharedPreferences(ctx), ctx)
-        }
+        fun get(ctx: Context): SettingsWrapper =
+            SettingsWrapper(PreferenceManager.getDefaultSharedPreferences(ctx), ctx)
     }
 }

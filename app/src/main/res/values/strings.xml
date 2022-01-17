@@ -18,9 +18,7 @@
 
     //Preferences
     <string name="preference_suffix_title">Default suffix</string>
-
     <string name="preference_password_title">Default password</string>
-
     <string name="preference_is_hashed_title">Hash input value</string>
 
     <string name="preference_is_casesensitive">Case sensitive input</string>
