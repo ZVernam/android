@@ -240,6 +240,16 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
+            R.id.action_hash -> {
+                if (item.title == "Hashed") {
+                    item.setIcon(R.drawable.ic_lock_open_24)
+                    item.title = "Unhashed"
+                } else {
+                    item.setIcon(R.drawable.ic_lock_locked_24)
+                    item.title = "Hashed"
+                }
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
