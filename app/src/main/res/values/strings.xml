@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ZVernam</string>
-    <string name="action_settings">Settings</string>
+
+    // Menu
+    <string name="action_menu_settings_title">Settings</string>
+    <string name="action_menu_hash_title">Hashed</string>
 
     <string name="app_title">ZVernam Cipher</string>
     <string name="app_input_plaintext">Plain Text</string>

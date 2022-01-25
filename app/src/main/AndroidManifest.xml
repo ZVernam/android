@@ -31,7 +31,7 @@
         </activity>
         <activity
             android:name=".settings.SettingsActivity"
-            android:label="@string/action_settings"
+            android:label="@string/action_menu_settings_title"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>
