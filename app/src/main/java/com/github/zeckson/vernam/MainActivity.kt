@@ -228,7 +228,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+        updateActionMenuHashButton(menu.findItem(R.id.action_menu_hash))
         return true
+    }
+
+    private fun updateActionMenuHashButton(hashButton: MenuItem) {
+        if (settings.isHashed) {
+            hashButton.setIcon(R.drawable.ic_lock_locked_24)
+            hashButton.title = getString(R.string.action_menu_hash_title)
+        } else {
+            hashButton.setIcon(R.drawable.ic_lock_open_24)
+            hashButton.title = getString(R.string.action_menu_hash_title_plain)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -241,13 +252,8 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_menu_hash -> {
-                if (item.title == "Hashed") {
-                    item.setIcon(R.drawable.ic_lock_open_24)
-                    item.title = "Unhashed"
-                } else {
-                    item.setIcon(R.drawable.ic_lock_locked_24)
-                    item.title = "Hashed"
-                }
+                settings.isHashed = !settings.isHashed
+                updateActionMenuHashButton(item)
                 true
             }
             else -> super.onOptionsItemSelected(item)

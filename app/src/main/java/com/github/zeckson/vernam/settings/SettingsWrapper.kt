@@ -49,8 +49,13 @@ class SettingsWrapper private constructor(
         return context.getString(resId)
     }
 
-    val isHashed: Boolean
-        get() = preferences.getBoolean(getString(R.string.preference_is_hashed_title), true)
+    private val hashedSettingsId = getString(R.string.preference_is_hashed_id)
+
+    var isHashed: Boolean
+        get() =
+            preferences.getBoolean(hashedSettingsId, true)
+        set(value) = preferences.edit()
+            .putBoolean(hashedSettingsId, value).apply()
 
 
     private fun getEncodedPasswordAndIv(): Pair<ByteArray, ByteArray>? {
