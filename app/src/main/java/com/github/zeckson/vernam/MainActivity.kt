@@ -236,11 +236,11 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> {
+            R.id.action_menu_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
-            R.id.action_hash -> {
+            R.id.action_menu_hash -> {
                 if (item.title == "Hashed") {
                     item.setIcon(R.drawable.ic_lock_open_24)
                     item.title = "Unhashed"
