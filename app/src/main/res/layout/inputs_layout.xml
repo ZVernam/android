@@ -43,7 +43,7 @@
             android:layout_marginTop="@dimen/default_margin"
             android:ems="@integer/default_input_wide"
             android:hint="@string/app_input_plaintext"
-            android:autofillHints="emailAddress, url"
+            android:autofillHints="url"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
