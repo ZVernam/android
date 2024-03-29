@@ -14,6 +14,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_FILENAME: zvernam.aab
 
     steps:
       - uses: actions/checkout@v2
@@ -57,7 +59,7 @@ jobs:
       - name: Sign build
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -69,20 +71,20 @@ jobs:
         run: ls app/build/outputs/bundle/release
 
       - name: Rename file
-        run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/zvernam.apk
+        run: mv app/build/outputs/bundle/release/app-release-signed.aab app/build/${{ env.RELEASE_FILENAME }}
 
       - name: Publish builded artifact
         uses: actions/upload-artifact@v2
         with:
           name: release
-          path: app/build/zvernam.apk
+          path: app/build/${{ env.RELEASE_FILENAME }}
 
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2 #https://github.com/marketplace/actions/upload-files-to-a-github-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: app/build/zvernam.apk
-          asset_name: zvernam-${{ github.event.release.tag_name }}.apk
+          file: app/build/${{ env.RELEASE_FILENAME }}
+          asset_name: zvernam-${{ env.VERSION }}.aab
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Release ${{ github.event.release.tag_name }}"
+          body: "Release ${{ env.VERSION }}"
