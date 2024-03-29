@@ -21,7 +21,7 @@ repositories {
 }
 
 val androidMinVersion = 24
-val androidTargetVersion = 31
+val androidTargetVersion = 34
 
 android {
     buildFeatures {
