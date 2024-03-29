@@ -20,7 +20,7 @@ repositories {
     }
 }
 
-
+val androidMinVersion = 24
 val androidTargetVersion = 31
 
 android {
@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId = "com.github.zeckson.vernam"
 
-        minSdk = 24
+        minSdk = androidMinVersion
         targetSdk = androidTargetVersion
 
         val myVersionCode = calculateVersionCode(version)
