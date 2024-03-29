@@ -1,6 +1,13 @@
 name: Publish Artifacts
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Build for version'
+        type: string
+        required: true
+
   release:
     types: [ published ] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
 
@@ -21,15 +28,25 @@ jobs:
       - name: Echo current actor
         run: echo 'Current user is:' $GITHUB_ACTOR
 
+      - name: Set Environment Variable
+        run: |
+          if [ -n "${{ github.event.release.tag_name }}" ]; then
+              echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+            else
+              echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+            fi
+      - name: Print Version
+        run: echo 'Version:' $VERSION
+
       - name: Print current version
-        run: echo 'Current version:' ${{ github.event.release.tag_name }}
+        run: echo 'Current version:' ${{ env.VERSION }}
 
       - name: Assemble Release with Gradle
         run: ./gradlew bundleRelease
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PROJECT_VERSION: ${{ github.event.release.tag_name }}
+          PROJECT_VERSION: ${{ env.VERSION }}
 
       - name: Get built files
         run: ls app/build/outputs/bundle/release
