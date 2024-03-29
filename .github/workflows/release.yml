@@ -25,11 +25,14 @@ jobs:
         run: echo 'Current version:' ${{ github.event.release.tag_name }}
 
       - name: Assemble Release with Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PROJECT_VERSION: ${{ github.event.release.tag_name }}
+
+      - name: Get built files
+        run: ls app/build/outputs/bundle/release
 
       - name: Get build-tools version
         run: ls /usr/local/lib/android/sdk/build-tools/
@@ -44,6 +47,9 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Show signed files
+        run: ls app/build/outputs/bundle/release
 
       - name: Rename file
         run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/zvernam.apk
