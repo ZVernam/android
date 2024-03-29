@@ -58,6 +58,7 @@ jobs:
 
       - name: Sign build
         uses: r0adkll/sign-android-release@v1
+        id: sign_app
         with:
           releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -68,10 +69,12 @@ jobs:
           BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Show signed files
-        run: ls app/build/outputs/bundle/release
+        run: | 
+            ls app/build/outputs/bundle/release
+            echo ${{ steps.sign_app.outputs.signedReleaseFile }}
 
       - name: Rename file
-        run: mv app/build/outputs/bundle/release/app-release-signed.aab app/build/${{ env.RELEASE_FILENAME }}
+        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/${{ env.RELEASE_FILENAME }}
 
       - name: Publish built artifact
         uses: actions/upload-artifact@v2
