@@ -1,12 +1,21 @@
 name: Publish Artifacts
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Build for version'
+        type: string
+        required: true
+
   release:
     types: [ published ] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_FILENAME: zvernam.aab
 
     steps:
       - uses: actions/checkout@v2
@@ -21,40 +30,64 @@ jobs:
       - name: Echo current actor
         run: echo 'Current user is:' $GITHUB_ACTOR
 
+      - name: Set Environment Variable
+        run: |
+          if [ -n "${{ github.event.release.tag_name }}" ]; then
+              echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+            else
+              echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+            fi
+      - name: Print Version
+        run: echo 'Version:' $VERSION
+
       - name: Print current version
-        run: echo 'Current version:' ${{ github.event.release.tag_name }}
+        run: echo 'Current version:' ${{ env.VERSION }}
 
       - name: Assemble Release with Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PROJECT_VERSION: ${{ github.event.release.tag_name }}
+          PROJECT_VERSION: ${{ env.VERSION }}
+
+      - name: Get built files
+        run: ls app/build/outputs/bundle/release
+
+      - name: Get build-tools version
+        run: ls /usr/local/lib/android/sdk/build-tools/
 
       - name: Sign build
         uses: r0adkll/sign-android-release@v1
+        id: sign_app
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Show signed files
+        run: | 
+            ls app/build/outputs/bundle/release
+            echo ${{ steps.sign_app.outputs.signedReleaseFile }}
 
       - name: Rename file
-        run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/zvernam.apk
+        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/${{ env.RELEASE_FILENAME }}
 
-      - name: Publish builded artifact
+      - name: Publish built artifact
         uses: actions/upload-artifact@v2
         with:
           name: release
-          path: app/build/zvernam.apk
+          path: app/build/${{ env.RELEASE_FILENAME }}
 
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2 #https://github.com/marketplace/actions/upload-files-to-a-github-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: app/build/zvernam.apk
-          asset_name: zvernam-${{ github.event.release.tag_name }}.apk
+          file: app/build/${{ env.RELEASE_FILENAME }}
+          asset_name: zvernam-${{ env.VERSION }}.aab
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Release ${{ github.event.release.tag_name }}"
+          body: "Release ${{ env.VERSION }}"

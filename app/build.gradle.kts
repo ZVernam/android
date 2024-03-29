@@ -20,13 +20,15 @@ repositories {
     }
 }
 
+val androidMinVersion = 24
+val androidTargetVersion = 34
 
 android {
     buildFeatures {
         viewBinding = true
     }
 
-    compileSdk = 30
+    compileSdk = androidTargetVersion
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -35,8 +37,8 @@ android {
     defaultConfig {
         applicationId = "com.github.zeckson.vernam"
 
-        minSdk = 24
-        targetSdk = 30
+        minSdk = androidMinVersion
+        targetSdk = androidTargetVersion
 
         val myVersionCode = calculateVersionCode(version)
         versionName = version
@@ -94,6 +96,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace = "com.github.zeckson.vernam"
 
 }
 
