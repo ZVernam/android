@@ -21,12 +21,14 @@ repositories {
 }
 
 
+val androidTargetVersion = 31
+
 android {
     buildFeatures {
         viewBinding = true
     }
 
-    compileSdk = 30
+    compileSdk = androidTargetVersion
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -36,7 +38,7 @@ android {
         applicationId = "com.github.zeckson.vernam"
 
         minSdk = 24
-        targetSdk = 30
+        targetSdk = androidTargetVersion
 
         val myVersionCode = calculateVersionCode(version)
         versionName = version
