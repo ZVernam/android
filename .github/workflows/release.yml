@@ -31,6 +31,9 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PROJECT_VERSION: ${{ github.event.release.tag_name }}
 
+      - name: Get build-tools version
+        run: ls /usr/local/lib/android/sdk/build-tools/
+
       - name: Sign build
         uses: r0adkll/sign-android-release@v1
         with:
@@ -39,6 +42,8 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Rename file
         run: mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/zvernam.apk
