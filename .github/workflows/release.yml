@@ -64,7 +64,6 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
-          apkFilePrefix: 'signed'
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
@@ -74,7 +73,7 @@ jobs:
       - name: Rename file
         run: mv app/build/outputs/bundle/release/app-release-signed.aab app/build/${{ env.RELEASE_FILENAME }}
 
-      - name: Publish builded artifact
+      - name: Publish built artifact
         uses: actions/upload-artifact@v2
         with:
           name: release
