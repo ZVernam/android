@@ -37,6 +37,7 @@ Features:
 - v1.1.2 - [v1.1.3](https://github.com/ZVernam/android/releases/tag/v1.1.3)
   - update Gradle version
   - fix manifest namespace
+- v1.1.3 - [v1.1.4](https://github.com/ZVernam/android/releases/tag/v1.1.4)
   - update to latest API Version 34
 
 ### Links:
