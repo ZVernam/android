@@ -26,6 +26,7 @@ val androidTargetVersion = 34
 android {
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     compileSdk = androidTargetVersion
@@ -69,12 +70,12 @@ android {
 
     buildTypes {
 
-        named("debug") {
+        debug {
             versionNameSuffix = "-SNAPSHOT"
         }
 
         // https://developer.android.com/studio/build/shrink-code
-        named("release") {
+        release {
             isMinifyEnabled = true
 
             proguardFiles(
