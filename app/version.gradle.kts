@@ -1,4 +1,4 @@
-val version by project.extra(System.getenv("PROJECT_VERSION") ?: "v1.0.6")
+val version by project.extra(System.getenv("PROJECT_VERSION") ?: "v0.6.9")
 
 fun calculate(version: String): Int {
     val values = version.substring(1).split('.')
