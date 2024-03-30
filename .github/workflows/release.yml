@@ -1,7 +1,7 @@
 name: Publish Artifacts
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
     inputs:
       version:
         description: 'Build for version'
