@@ -69,12 +69,12 @@ android {
 
     buildTypes {
 
-        named("debug") {
+        debug {
             versionNameSuffix = "-SNAPSHOT"
         }
 
         // https://developer.android.com/studio/build/shrink-code
-        named("release") {
+        release {
             isMinifyEnabled = true
 
             proguardFiles(
