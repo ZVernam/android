@@ -26,6 +26,7 @@ val androidTargetVersion = 34
 android {
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     compileSdk = androidTargetVersion
