@@ -97,7 +97,7 @@ jobs:
           echo "Release files: ${{ steps.sign.outputs.signedReleaseFile }}"       
 
       - name: Rename Signed APK File
-        run: mv ./zvernam-${{ env.VERSION }}-signed.apk ./${{ env.APK_RELEASE_FILENAME }}
+        run: mv ./${{ steps.sign.outputs.signedReleaseFile }} ./${{ env.APK_RELEASE_FILENAME }}
 
       - name: Upload Signed artifacts
         uses: actions/upload-artifact@v4
