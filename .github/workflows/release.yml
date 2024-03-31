@@ -65,6 +65,7 @@ jobs:
           path: |
             app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
             app/build/${{ env.APK_RELEASE_FILENAME }}
+          if-no-files-found: error
 
   sign:
     needs: build
@@ -102,7 +103,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: signed
-          path: ./*.{aab,apk}
+          path: |
+            ./${{ env.BUNDLE_RELEASE_FILENAME }}
+            ./${{ env.APK_RELEASE_FILENAME }}
+          if-no-files-found: error
 
   release:
     needs: sign
