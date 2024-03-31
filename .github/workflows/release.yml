@@ -62,7 +62,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unsigned
-          path: app/build/*.{aab,apk}
+          path: |
+            app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
+            app/build/${{ env.APK_RELEASE_FILENAME }}
 
   sign:
     needs: build
