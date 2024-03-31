@@ -121,6 +121,16 @@ jobs:
         run: ls -lah
 
       - name: Create release ${{ env.VERSION }} draft
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: true
+          draft: true
+          files: |
+            ./${{ env.BUNDLE_RELEASE_FILENAME }}
+            ./${{ env.APK_RELEASE_FILENAME }}
+
+      - name: Create release ${{ env.VERSION }} draft
         if: false
         uses: svenstaro/upload-release-action@v2 #https://github.com/marketplace/actions/upload-files-to-a-github-release
         with:
