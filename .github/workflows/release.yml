@@ -15,7 +15,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      RELEASE_FILENAME: zvernam.aab
+      VERSION: ${{ github.event.release.tag_name || inputs.version }}
+      BUNDLE_RELEASE_FILENAME: zvernam-${{ VERSION }}.aab
+      BUNDLE_FILE_PATH: app/build/outputs/bundle/release # Aka AAB file
+      APK_RELEASE_FILENAME: zvernam-${{ VERSION }}.aab
+      APK_FILE_PATH: app/build/outputs/apk/release
 
     steps:
       - uses: actions/checkout@v4
@@ -24,43 +28,36 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 11
           cache: gradle
+
+      - name: Print All Env Vars
+        run: env
 
       - name: Echo current actor
         run: echo 'Current user is:' $GITHUB_ACTOR
-
-      - name: Set Environment Variable
-        run: |
-          if [ -n "${{ github.event.release.tag_name }}" ]; then
-              echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-            else
-              echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
-            fi
-      - name: Print Version
-        run: echo 'Version:' $VERSION
 
       - name: Print current version
         run: echo 'Current version:' ${{ env.VERSION }}
 
       - name: Assemble Release with Gradle
-        run: ./gradlew bundleRelease
+        run: ./gradlew assembleRelease bundleRelease
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PROJECT_VERSION: ${{ env.VERSION }}
 
-      - name: Get built files
-        run: ls app/build/outputs/bundle/release
-
       - name: Get build-tools version
         run: ls /usr/local/lib/android/sdk/build-tools/
 
-      - name: Sign build
+      - name: Show Bundle Files
+        run: ls ${{ env.BUNDLE_FILE_PATH }}
+
+      - name: Sign AAB Bundle Files
         uses: r0adkll/sign-android-release@v1
-        id: sign_app
+        id: sign_aab
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: ${{ env.BUNDLE_FILE_PATH }}
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -69,25 +66,46 @@ jobs:
           BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Show signed files
-        run: | 
-            ls app/build/outputs/bundle/release
-            echo ${{ steps.sign_app.outputs.signedReleaseFile }}
+        run: echo ${{ steps.sign_aab.outputs.signedReleaseFile }}
 
-      - name: Rename file
-        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/${{ env.RELEASE_FILENAME }}
+      - name: Move Signed AAB File
+        run: mv ${{ steps.sign_aab.outputs.signedReleaseFile }} app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
+
+      - name: Show Built APK Files
+        run: ls ${{ env.APK_FILE_PATH }}
+
+      - name: Sign APK Files
+        uses: r0adkll/sign-android-release@v1
+        id: sign_apk
+        with:
+          releaseDirectory: ${{ env.APK_FILE_PATH }}
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Show signed APK files
+        run: echo ${{ steps.sign_apk.outputs.signedReleaseFile }}
+               
+      - name: Move Signed File
+        run: mv ${{ steps.sign_apk.outputs.signedReleaseFile }} app/build/${{ env.APK_RELEASE_FILENAME }}
+
 
       - name: Publish built artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: release
-          path: app/build/${{ env.RELEASE_FILENAME }}
+          path: app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
 
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2 #https://github.com/marketplace/actions/upload-files-to-a-github-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: app/build/${{ env.RELEASE_FILENAME }}
+          file: app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
           asset_name: zvernam-${{ env.VERSION }}.aab
           tag: ${{ github.ref }}
+          draft: true
           overwrite: true
           body: "Release ${{ env.VERSION }}"
