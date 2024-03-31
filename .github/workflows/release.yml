@@ -8,8 +8,9 @@ on:
         type: string
         required: true
 
-  release:
-    types: [ published ] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
+  push:
+    tags:
+      - "v*.*.*"
 
 env:
   VERSION: ${{ github.event.release.tag_name || inputs.version }}
