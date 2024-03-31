@@ -11,16 +11,14 @@ on:
   release:
     types: [ published ] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
 
-env:
-  VERSION: ${{ github.event.release.tag_name || inputs.version }}
-
 jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_RELEASE_FILENAME: zvernam-${{ VERSION }}.aab
+      VERSION: ${{ github.event.release.tag_name || inputs.version }}
+      BUNDLE_RELEASE_FILENAME: zvernam-${{ github.event.release.tag_name || inputs.version }}.aab
       BUNDLE_FILE_PATH: app/build/outputs/bundle/release # Aka AAB file
-      APK_RELEASE_FILENAME: zvernam-${{ VERSION }}.apk
+      APK_RELEASE_FILENAME: zvernam-${{ github.event.release.tag_name || inputs.version }}.apk
       APK_FILE_PATH: app/build/outputs/apk/release
 
     steps:
