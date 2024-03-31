@@ -13,10 +13,10 @@ on:
       - "v*.*.*"
 
 env:
-  VERSION: ${{ github.event.release.tag_name || inputs.version }}
-  BUNDLE_RELEASE_FILENAME: zvernam-${{ github.event.release.tag_name || inputs.version }}.aab
+  VERSION: ${{ inputs.version || github.ref_name }}
+  BUNDLE_RELEASE_FILENAME: zvernam-${{ inputs.version || github.ref_name }}.aab
   BUNDLE_FILE_PATH: app/build/outputs/bundle/release # Aka AAB file
-  APK_RELEASE_FILENAME: zvernam-${{ github.event.release.tag_name || inputs.version }}.apk
+  APK_RELEASE_FILENAME: zvernam-${{ inputs.version || github.ref_name }}.apk
   APK_FILE_PATH: app/build/outputs/apk/release
 
 jobs:
@@ -31,9 +31,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-
-      - name: Print All Env Vars
-        run: env
 
       - name: Echo current actor
         run: echo 'Current user is:' $GITHUB_ACTOR
