@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.github.zeckson.vernam.databinding.ActivityLayoutBinding
 import com.github.zeckson.vernam.databinding.InputsLayoutBinding
 import com.github.zeckson.vernam.settings.SettingsActivity
 import com.github.zeckson.vernam.settings.SettingsWrapper
-import com.github.zeckson.vernam.util.*
+import com.github.zeckson.vernam.util.getHost
+import com.github.zeckson.vernam.util.onTextChanged
+import com.github.zeckson.vernam.util.setResultText
+import com.github.zeckson.vernam.util.setTextToClipBoard
+import com.github.zeckson.vernam.util.setupInitedDecryptCipher
+import com.github.zeckson.vernam.util.showToast
 import javax.crypto.Cipher
 
 
@@ -26,12 +32,21 @@ class MainActivity : AppCompatActivity() {
         SettingsWrapper.get(this)
     }
 
-    private val mainViewModel: MainViewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
+    private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
 
     private lateinit var mainBinding: ActivityLayoutBinding
     private lateinit var inputBinding: InputsLayoutBinding
+
+    private val copyToClipboardListener: View.OnClickListener = View.OnClickListener {
+        val text = inputBinding.cipherText.text.toString()
+        if (text.isEmpty()) return@OnClickListener
+
+        this.setTextToClipBoard(text)
+        showToast("Text Copied To Clipboard")
+        setResultText(text)
+        // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
+        finish()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,20 +216,14 @@ class MainActivity : AppCompatActivity() {
         inputBinding.plainText.onTextChanged(::updateTextValues)
         inputBinding.passwordText.onTextChanged(::updateTextValues)
 
-        inputBinding.copyToClipboard.setOnClickListener {
-            val text = inputBinding.cipherText.text.toString()
-            if (text.isEmpty()) return@setOnClickListener
+        settings.addChangesListener(::updateTextValues)
 
-            this.setTextToClipBoard(text)
-            showToast("Text Copied To Clipboard")
-            setResultText(text)
-            // BC! https://stackoverflow.com/questions/2590947/how-does-activity-finish-work-in-android
-            finish()
-        }
+        inputBinding.copyToClipboard.setOnClickListener(copyToClipboardListener)
 
     }
 
     private fun updateTextValues() {
+        Log.i(TAG, "Update text values")
 
         val plainText = inputBinding.plainText.text.toString()
         val password = inputBinding.passwordText.text.toString()
@@ -222,6 +231,11 @@ class MainActivity : AppCompatActivity() {
         val generateCipherText = mainViewModel.generateCipherText(plainText, password)
         inputBinding.cipherText.setText(generateCipherText)
         inputBinding.copyToClipboard.isEnabled = generateCipherText.isNotEmpty()
+
+        val hashButton = mainBinding.toolbar.menu.findItem(R.id.action_menu_hash)
+        if (hashButton != null) {
+            updateActionMenuHashButton(hashButton)
+        }
     }
 
 
@@ -251,11 +265,13 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
+
             R.id.action_menu_hash -> {
                 settings.isHashed = !settings.isHashed
                 updateActionMenuHashButton(item)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

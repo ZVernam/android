@@ -3,12 +3,14 @@ package com.github.zeckson.vernam.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
+import android.util.Log
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceManager
 import com.github.zeckson.vernam.R
 import com.github.zeckson.vernam.util.biometricStatus
 import com.github.zeckson.vernam.util.setupInitedDecryptCipher
 import javax.crypto.Cipher
+import kotlin.reflect.KFunction0
 
 class SettingsWrapper private constructor(
     private val preferences: SharedPreferences,
@@ -79,6 +81,13 @@ class SettingsWrapper private constructor(
         val (input, _) = getEncodedPasswordAndIv() ?: return null
         val decoded = cipher.doFinal(input)
         return decoded.toString(Charsets.UTF_8)
+    }
+
+    fun addChangesListener(changeListener: () -> Unit) {
+        preferences.registerOnSharedPreferenceChangeListener { _, key ->
+            Log.i("Settings", "Settings changed for key $key")
+            changeListener()
+        }
     }
 
 
