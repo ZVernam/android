@@ -8,15 +8,20 @@ on:
         type: string
         required: true
 
-  release:
-    types: [ published ] # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  VERSION: ${{ github.event.release.tag_name || inputs.version }}
+  BUNDLE_RELEASE_FILENAME: zvernam-${{ github.event.release.tag_name || inputs.version }}.aab
+  BUNDLE_FILE_PATH: app/build/outputs/bundle/release # Aka AAB file
+  APK_RELEASE_FILENAME: zvernam-${{ github.event.release.tag_name || inputs.version }}.apk
+  APK_FILE_PATH: app/build/outputs/apk/release
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-    env:
-      RELEASE_FILENAME: zvernam.aab
-
     steps:
       - uses: actions/checkout@v4
 
@@ -27,40 +32,59 @@ jobs:
           java-version: 17
           cache: gradle
 
+      - name: Print All Env Vars
+        run: env
+
       - name: Echo current actor
         run: echo 'Current user is:' $GITHUB_ACTOR
-
-      - name: Set Environment Variable
-        run: |
-          if [ -n "${{ github.event.release.tag_name }}" ]; then
-              echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-            else
-              echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
-            fi
-      - name: Print Version
-        run: echo 'Version:' $VERSION
 
       - name: Print current version
         run: echo 'Current version:' ${{ env.VERSION }}
 
+      - name: Get build-tools version
+        run: ls /usr/local/lib/android/sdk/build-tools/
+
       - name: Assemble Release with Gradle
-        run: ./gradlew bundleRelease
+        run: ./gradlew assembleRelease bundleRelease
         env:
           USERNAME: ${{ env.GITHUB_ACTOR }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PROJECT_VERSION: ${{ env.VERSION }}
 
-      - name: Get built files
-        run: ls app/build/outputs/bundle/release
+      - name: List output files
+        run: find app/build/outputs -type f
 
-      - name: Get build-tools version
-        run: ls /usr/local/lib/android/sdk/build-tools/
+      - name: Move Unsigned File
+        run: |
+          mv ${{ env.BUNDLE_FILE_PATH }}/*.aab app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
+          mv ${{ env.APK_FILE_PATH }}/*.apk app/build/${{ env.APK_RELEASE_FILENAME }}
 
-      - name: Sign build
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          name: unsigned
+          path: |
+            app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
+            app/build/${{ env.APK_RELEASE_FILENAME }}
+          if-no-files-found: error
+
+  sign:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Unsigned Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: unsigned
+
+      - name: Show Downloaded Files
+        run: ls -lah
+
+      - name: Sign Files
+        uses: r0adkll/sign-android-release@v1
+        id: sign
+        with:
+          releaseDirectory: .
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -69,25 +93,52 @@ jobs:
           BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Show signed files
-        run: | 
-            ls app/build/outputs/bundle/release
-            echo ${{ steps.sign_app.outputs.signedReleaseFile }}
+        run: |
+          ls -lah
+          echo "Release files: ${{ steps.sign.outputs.signedReleaseFile }}"       
 
-      - name: Rename file
-        run: mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/${{ env.RELEASE_FILENAME }}
+      - name: Rename Signed APK File
+        run: mv ./${{ steps.sign.outputs.signedReleaseFile }} ./${{ env.APK_RELEASE_FILENAME }}
 
-      - name: Publish built artifact
-        uses: actions/upload-artifact@v2
+      - name: Upload Signed artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: release
-          path: app/build/${{ env.RELEASE_FILENAME }}
+          name: signed
+          path: |
+            ./${{ env.BUNDLE_RELEASE_FILENAME }}
+            ./${{ env.APK_RELEASE_FILENAME }}
+          if-no-files-found: error
 
-      - name: Upload to release
+  release:
+    needs: sign
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Signed Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: signed
+
+      - name: Show Downloaded Files
+        run: ls -lah
+
+      - name: Create release ${{ env.VERSION }} draft
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: true
+          draft: true
+          files: |
+            ./${{ env.BUNDLE_RELEASE_FILENAME }}
+            ./${{ env.APK_RELEASE_FILENAME }}
+
+      - name: Create release ${{ env.VERSION }} draft
+        if: false
         uses: svenstaro/upload-release-action@v2 #https://github.com/marketplace/actions/upload-files-to-a-github-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: app/build/${{ env.RELEASE_FILENAME }}
+          file: ${{ env.BUNDLE_RELEASE_FILENAME }}
           asset_name: zvernam-${{ env.VERSION }}.aab
           tag: ${{ github.ref }}
+          draft: true
           overwrite: true
           body: "Release ${{ env.VERSION }}"
