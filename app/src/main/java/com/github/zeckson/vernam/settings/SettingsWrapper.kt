@@ -2,15 +2,14 @@ package com.github.zeckson.vernam.settings
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.util.Base64
-import android.util.Log
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceManager
 import com.github.zeckson.vernam.R
 import com.github.zeckson.vernam.util.biometricStatus
 import com.github.zeckson.vernam.util.setupInitedDecryptCipher
 import javax.crypto.Cipher
-import kotlin.reflect.KFunction0
 
 class SettingsWrapper private constructor(
     private val preferences: SharedPreferences,
@@ -83,16 +82,15 @@ class SettingsWrapper private constructor(
         return decoded.toString(Charsets.UTF_8)
     }
 
-    fun addChangesListener(changeListener: () -> Unit) {
-        preferences.registerOnSharedPreferenceChangeListener { _, key ->
-            Log.i("Settings", "Settings changed for key $key")
-            changeListener()
-        }
-    }
-
-
     val suffix: String
         get() = preferences.getString(getString(R.string.preference_suffix_id), EMPTY_STRING)!!
+
+    fun addChangesListener(listener: OnSharedPreferenceChangeListener) {
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+    fun removeChangesListener(listener: OnSharedPreferenceChangeListener) {
+        preferences.unregisterOnSharedPreferenceChangeListener(listener)
+    }
 
     companion object {
         private const val EMPTY_STRING = ""

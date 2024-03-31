@@ -1,7 +1,10 @@
 package com.github.zeckson.vernam
 
 import android.content.Intent
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,7 +18,6 @@ import com.github.zeckson.vernam.databinding.InputsLayoutBinding
 import com.github.zeckson.vernam.settings.SettingsActivity
 import com.github.zeckson.vernam.settings.SettingsWrapper
 import com.github.zeckson.vernam.util.getHost
-import com.github.zeckson.vernam.util.onTextChanged
 import com.github.zeckson.vernam.util.setResultText
 import com.github.zeckson.vernam.util.setTextToClipBoard
 import com.github.zeckson.vernam.util.setupInitedDecryptCipher
@@ -48,6 +50,21 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    private val inputFieldsWatcher = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) = updateTextValues()
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            // do nothing
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            // do nothing
+        }
+    }
+
+    private val settingsChangeListener =
+        OnSharedPreferenceChangeListener { _, _ -> updateTextValues() }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // debug light theme
@@ -62,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         restoreSavedState(savedInstanceState == null)
 
-        setupListeners()
+        inputBinding.copyToClipboard.setOnClickListener(copyToClipboardListener)
     }
 
     private fun restoreSavedState(newState: Boolean) {
@@ -134,13 +151,16 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         Log.v(TAG, "Starting...")
 
-        inputBinding.plainText.requestFocus()
+        updateTextValues()
+        setupListeners()
     }
 
 
     override fun onResume() {
         super.onResume()
         Log.v(TAG, "Resuming...")
+
+        inputBinding.plainText.requestFocus()
     }
 
     override fun onPause() {
@@ -151,6 +171,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.v(TAG, "Stopped...")
+
+        cleanListeners()
     }
 
     override fun onDestroy() {
@@ -212,14 +234,17 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setupListeners() {
+        inputBinding.plainText.addTextChangedListener(inputFieldsWatcher)
+        inputBinding.passwordText.addTextChangedListener(inputFieldsWatcher)
 
-        inputBinding.plainText.onTextChanged(::updateTextValues)
-        inputBinding.passwordText.onTextChanged(::updateTextValues)
+        settings.addChangesListener(settingsChangeListener)
+    }
 
-        settings.addChangesListener(::updateTextValues)
+    private fun cleanListeners() {
+        inputBinding.plainText.removeTextChangedListener(inputFieldsWatcher)
+        inputBinding.passwordText.removeTextChangedListener(inputFieldsWatcher)
 
-        inputBinding.copyToClipboard.setOnClickListener(copyToClipboardListener)
-
+        settings.removeChangesListener(settingsChangeListener)
     }
 
     private fun updateTextValues() {
@@ -242,8 +267,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
-        updateActionMenuHashButton(menu.findItem(R.id.action_menu_hash))
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val result = super.onPrepareOptionsMenu(menu)
+        updateActionMenuHashButton(menu.findItem(R.id.action_menu_hash))
+        return result
     }
 
     private fun updateActionMenuHashButton(hashButton: MenuItem) {
