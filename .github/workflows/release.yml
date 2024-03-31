@@ -50,10 +50,13 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PROJECT_VERSION: ${{ env.VERSION }}
 
+      - name: List output files
+        run: find app/build/outputs -type f
+
       - name: Move Unsigned File
         run: |
           mv ${{ env.BUNDLE_FILE_PATH }}/*.aab app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
-          mv ${{ env.BUNDLE_FILE_PATH }}/*.apk app/build/${{ env.BUNDLE_RELEASE_FILENAME }}
+          mv ${{ env.APK_FILE_PATH }}/*.apk app/build/${{ env.APK_RELEASE_FILENAME }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
