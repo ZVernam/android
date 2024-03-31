@@ -2,6 +2,7 @@ package com.github.zeckson.vernam.settings
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.util.Base64
 import androidx.biometric.BiometricManager
 import androidx.preference.PreferenceManager
@@ -49,8 +50,13 @@ class SettingsWrapper private constructor(
         return context.getString(resId)
     }
 
-    val isHashed: Boolean
-        get() = preferences.getBoolean(getString(R.string.preference_is_hashed_title), true)
+    private val hashedSettingsId = getString(R.string.preference_is_hashed_id)
+
+    var isHashed: Boolean
+        get() =
+            preferences.getBoolean(hashedSettingsId, true)
+        set(value) = preferences.edit()
+            .putBoolean(hashedSettingsId, value).apply()
 
 
     private fun getEncodedPasswordAndIv(): Pair<ByteArray, ByteArray>? {
@@ -76,9 +82,15 @@ class SettingsWrapper private constructor(
         return decoded.toString(Charsets.UTF_8)
     }
 
-
     val suffix: String
         get() = preferences.getString(getString(R.string.preference_suffix_id), EMPTY_STRING)!!
+
+    fun addChangesListener(listener: OnSharedPreferenceChangeListener) {
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+    fun removeChangesListener(listener: OnSharedPreferenceChangeListener) {
+        preferences.unregisterOnSharedPreferenceChangeListener(listener)
+    }
 
     companion object {
         private const val EMPTY_STRING = ""
