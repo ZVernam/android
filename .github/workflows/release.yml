@@ -94,7 +94,7 @@ jobs:
       - name: Show signed files
         run: |
           ls -lah
-          echo ${{ steps.sign.outputs.signedReleaseFiles }}        
+          echo "Release files: ${{ steps.sign.outputs.signedReleaseFiles }}"       
 
       - name: Rename Signed APK File
         run: mv ${{ steps.sign.signedReleaseFile1 }} ./${{ env.APK_RELEASE_FILENAME }}
