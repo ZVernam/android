@@ -130,15 +130,3 @@ jobs:
           files: |
             ./${{ env.BUNDLE_RELEASE_FILENAME }}
             ./${{ env.APK_RELEASE_FILENAME }}
-
-      - name: Create release ${{ env.VERSION }} draft
-        if: false
-        uses: svenstaro/upload-release-action@v2 #https://github.com/marketplace/actions/upload-files-to-a-github-release
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.BUNDLE_RELEASE_FILENAME }}
-          asset_name: zvernam-${{ env.VERSION }}.aab
-          tag: ${{ github.ref }}
-          draft: true
-          overwrite: true
-          body: "Release ${{ env.VERSION }}"
