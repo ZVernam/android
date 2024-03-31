@@ -18,9 +18,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_RELEASE_FILENAME: zvernam-${{ env.VERSION }}.aab
+      BUNDLE_RELEASE_FILENAME: zvernam-${{ VERSION }}.aab
       BUNDLE_FILE_PATH: app/build/outputs/bundle/release # Aka AAB file
-      APK_RELEASE_FILENAME: zvernam-${{ env.VERSION }}.aab
+      APK_RELEASE_FILENAME: zvernam-${{ VERSION }}.apk
       APK_FILE_PATH: app/build/outputs/apk/release
 
     steps:
