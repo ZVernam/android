@@ -12,6 +12,8 @@ then
   exit 1
 fi
 
+TAG="v$TAG"
+
 echo "Reapplying tag: $TAG to latest commit with message: $MESSAGE"
 
 git tag -d $TAG
