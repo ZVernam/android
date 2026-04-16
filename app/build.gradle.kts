@@ -22,6 +22,12 @@ repositories {
 val androidMinVersion = 24
 val androidTargetVersion = 35
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+    }
+}
+
 android {
     buildFeatures {
         viewBinding = true
@@ -93,11 +99,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
-        }
-    }
     namespace = "com.github.zeckson.vernam"
 
 }
