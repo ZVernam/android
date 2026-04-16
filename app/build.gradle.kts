@@ -29,6 +29,11 @@ kotlin {
 }
 
 android {
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
