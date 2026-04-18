@@ -28,7 +28,7 @@ import com.github.zeckson.vernam.util.*
 import javax.crypto.Cipher
 
 class BiometricEditTextPreference(
-    context: Context?,
+    context: Context,
     attrs: AttributeSet?
 ) :
     EditTextPreference(context, attrs) {
@@ -40,7 +40,7 @@ class BiometricEditTextPreference(
             if (biometricStatus == BIOMETRIC_ERROR_NONE_ENROLLED
             ) {
                 "Biometric weren't enrolled. Click here to setup"
-            } else if (it.text == null || it.text.isEmpty()) {
+            } else if (it.text.isNullOrEmpty()) {
                 "Not set"
             } else {
                 "Password is set"
@@ -102,7 +102,7 @@ class BiometricEditTextPreference(
 
 
     private fun createBiometricPrompt(caller: PreferenceFragmentCompat): BiometricPrompt {
-        val executor = ContextCompat.getMainExecutor(caller.context)
+        val executor = ContextCompat.getMainExecutor(caller.requireContext())
 
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -203,9 +203,9 @@ class BiometricEditTextPreference(
             }
         }
 
-        override fun onPrepareDialogBuilder(builder: AlertDialog.Builder?) {
+        override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {
             super.onPrepareDialogBuilder(builder)
-            builder?.setNeutralButton(R.string.clear_default_password) { _: DialogInterface, _: Int ->
+            builder.setNeutralButton(R.string.clear_default_password) { _: DialogInterface, _: Int ->
                 saveValue("")
             }
         }

@@ -22,7 +22,7 @@ class SettingsActivity : AppCompatActivity(),
 
     override fun onPreferenceDisplayDialog(
         caller: PreferenceFragmentCompat,
-        pref: Preference?
+        pref: Preference
     ): Boolean {
         return when (pref) {
             is BiometricEditTextPreference -> pref.showBiometricPrompt(caller)

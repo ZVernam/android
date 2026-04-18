@@ -1,5 +1,3 @@
-@file:Suppress("LocalVariableName")
-
 apply(from = "version.gradle.kts")
 val version: String by project.extra
 val calculateVersionCode: (String) -> Int by project.extra
@@ -39,7 +37,7 @@ android {
         buildConfig = true
     }
 
-    compileSdk = androidTargetVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -110,42 +108,40 @@ android {
 
 dependencies {
     // Biometric module
-    implementation("androidx.biometric:biometric:1.1.0")
+    implementation(libs.androidx.biometric)
 
     // App compat backward compatibility lib
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation(libs.androidx.appcompat)
 
     // AndroidX simplified preference manipulation
-    implementation("androidx.preference:preference-ktx:1.1.1")
+    implementation(libs.androidx.preference.ktx)
 
     // AndroidX security lib
-    implementation("androidx.security:security-crypto:1.1.0-alpha03")
+    implementation(libs.androidx.security.crypto)
 
     // Material design UI libs
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
 
     // Test libraries
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-
-    val lifecycle_version = "2.2.0"
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.livedata.ktx)
     // Lifecycles only (without ViewModel or LiveData)
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Saved state module for ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
     // alternately - if using Java8, use the following instead of lifecycle-compiler
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation(libs.androidx.lifecycle.common.java8)
+    implementation(libs.androidx.lifecycle.extensions1)
 
     // vernam library
-    implementation("com.github.zeckson:vernam-tools:0.3.0")
+    implementation(libs.vernam.tools)
 }
