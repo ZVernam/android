@@ -30,9 +30,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MyActivity"
     }
 
-    private val settings by lazy(LazyThreadSafetyMode.NONE) {
-        SettingsWrapper.get(this)
-    }
+    private val settings get() = SettingsWrapper.get(this)
 
     private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
 
@@ -88,10 +86,6 @@ class MainActivity : AppCompatActivity() {
 
         val myViewModel = mainViewModel
 
-        if (newState && settings.passwordState == SettingsWrapper.PasswordState.SET) {
-            validateBiometrics()
-        }
-
         intent.getHost()?.let {
             Log.i(TAG, "Received url from intent: $it")
             myViewModel.plainTextValue = it
@@ -115,7 +109,10 @@ class MainActivity : AppCompatActivity() {
     private fun validateBiometrics() {
         val iv = settings.getPasswordIV()!!
         val cipher = setupInitedDecryptCipher(iv)!!
-        createBiometricPrompt(::onBiometricSuccess, ::onBiometricFail).authenticate(
+        createBiometricPrompt(
+            ::onBiometricSuccess,
+            ::onBiometricFail
+        ).authenticate(
             createPromptInfo(),
             BiometricPrompt.CryptoObject(cipher)
         )
@@ -133,8 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onBiometricSuccess(cipher: Cipher) {
-        val loadedPasswordHash =
-            settings.getDefaultPasswordHash(cipher)
+        val loadedPasswordHash = settings.getDefaultPasswordHash(cipher)
         if (loadedPasswordHash != null) {
             mainViewModel.passwordHash = loadedPasswordHash
 
@@ -147,6 +143,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Log.v(TAG, "Starting...")
+
+        if (settings.passwordState == SettingsWrapper.PasswordState.SET) {
+            validateBiometrics()
+        } else {
+            mainViewModel.passwordHash = ""
+        }
 
         updateTextValues()
         setupListeners()
@@ -187,8 +189,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun createPromptInfo(): BiometricPrompt.PromptInfo =
-        BiometricPrompt.PromptInfo.Builder()
-            .setTitle(getString(R.string.prompt_info_title))
+        BiometricPrompt.PromptInfo.Builder().setTitle(getString(R.string.prompt_info_title))
             .setSubtitle(getString(R.string.prompt_info_subtitle))
             .setDescription(getString(R.string.prompt_info_description))
             .setConfirmationRequired(false)
@@ -200,8 +201,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun createBiometricPrompt(
-        onSuccess: (cipher: Cipher) -> Unit,
-        onFail: (code: Int?, msg: CharSequence?) -> Unit
+        onSuccess: (cipher: Cipher) -> Unit, onFail: (code: Int?, msg: CharSequence?) -> Unit
     ): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(this)
 
