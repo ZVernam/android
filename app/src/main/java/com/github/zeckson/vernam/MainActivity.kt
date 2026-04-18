@@ -138,10 +138,7 @@ class MainActivity : AppCompatActivity() {
         if (loadedPasswordHash != null) {
             mainViewModel.passwordHash = loadedPasswordHash
 
-            inputBinding.passwordTextLayout.setInternalHint(
-                getString(R.string.default_password_hint),
-                ContextCompat.getColor(this, R.color.primaryTextColor)
-            )
+            updatePasswordHint()
 
             updateTextValues()
         }
@@ -237,6 +234,10 @@ class MainActivity : AppCompatActivity() {
         inputBinding.plainText.addTextChangedListener(inputFieldsWatcher)
         inputBinding.passwordText.addTextChangedListener(inputFieldsWatcher)
 
+        inputBinding.passwordText.setOnFocusChangeListener { _, _ ->
+            updatePasswordHint()
+        }
+
         settings.addChangesListener(settingsChangeListener)
     }
 
@@ -244,11 +245,31 @@ class MainActivity : AppCompatActivity() {
         inputBinding.plainText.removeTextChangedListener(inputFieldsWatcher)
         inputBinding.passwordText.removeTextChangedListener(inputFieldsWatcher)
 
+        inputBinding.passwordText.onFocusChangeListener = null
+
         settings.removeChangesListener(settingsChangeListener)
+    }
+
+    private fun updatePasswordHint() {
+        val hasFocus = inputBinding.passwordText.hasFocus()
+        val isEmpty = inputBinding.passwordText.text.isNullOrEmpty()
+        val hasHash = mainViewModel.passwordHash.isNotEmpty()
+
+        val newHint = if ((!hasFocus) && isEmpty && hasHash) {
+            getString(R.string.default_password_hint)
+        } else {
+            getString(R.string.app_input_secret)
+        }
+
+        if (inputBinding.passwordTextLayout.hint != newHint) {
+            inputBinding.passwordTextLayout.hint = newHint
+        }
     }
 
     private fun updateTextValues() {
         Log.i(TAG, "Update text values")
+
+        updatePasswordHint()
 
         val plainText = inputBinding.plainText.text.toString()
         val password = inputBinding.passwordText.text.toString()
