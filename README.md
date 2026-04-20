@@ -17,6 +17,7 @@ Features:
 
 ### Release sequence:
 - Update Release notes in [Release Notes] section
+- Commit changes
 - Create tag with `release.sh` file
 - Commit all changes
 
@@ -56,6 +57,10 @@ Features:
   - fix top toolbar issue
 - v1.2.3 - [v1.2.4](https://github.com/ZVernam/android/releases/tag/v1.2.4)
   - update gradle version
+- v1.2.4 - [v1.3.0](https://github.com/ZVernam/android/releases/tag/v1.3.0)
+  - update styles
+  - update password on start
+  - clean up layouts and dependencies
 
 ### Links:
 - [Awesome asset studio](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&foreground.space.trim=1&foreground.space.pad=0&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(30%2C%2080%2C%2032)&crop=0&backgroundShape=circle&effects=elevate&name=ic_launcher_round)
