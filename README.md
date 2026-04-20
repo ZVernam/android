@@ -15,6 +15,11 @@ Features:
 - Strips domain name from url
 - Optionally can add any suffix to your input string as a salt
 
+### Release sequence:
+- Update Release notes in [Release Notes] section
+- Create tag with `release.sh` file
+- Commit all changes
+
 ### Release Notes
 - [v1.0.0](https://github.com/ZVernam/android/releases/tag/v1.0.0)
   - initial release
