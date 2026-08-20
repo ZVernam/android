@@ -61,7 +61,7 @@ Features:
   - update styles
   - update password on start
   - clean up layouts and dependencies
-**- v1.3.0 - [v1.3.1](https://github.com/ZVernam/android/releases/tag/v1.3.1)
+- v1.3.0 - [v1.3.1](https://github.com/ZVernam/android/releases/tag/v1.3.1)
   - update target SDK to Android 16 (API 36)
 
 ### Links:
