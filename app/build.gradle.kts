@@ -18,7 +18,7 @@ repositories {
 }
 
 val androidMinVersion = 24
-val androidTargetVersion = 35
+val androidTargetVersion = 36
 
 kotlin {
     compilerOptions {

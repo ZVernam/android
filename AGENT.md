@@ -16,7 +16,7 @@ This repository contains the Android application for the Vernam Password Generat
 - **Language:** Kotlin
 - **Build System:** Gradle (Kotlin DSL)
 - **Minimum SDK:** 24
-- **Target SDK:** 35
+- **Target SDK:** 36
 - **Libraries:**
     - AndroidX (AppCompat, Biometric, Preference, Security Crypto, Lifecycle)
     - Google Material Components
