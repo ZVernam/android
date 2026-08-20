@@ -19,6 +19,7 @@ repositories {
 
 val androidMinVersion = 24
 val androidTargetVersion = 36
+val androidCompileSDK = 37
 
 kotlin {
     compilerOptions {
@@ -37,7 +38,7 @@ android {
         buildConfig = true
     }
 
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = androidCompileSDK
 
     testOptions {
         unitTests.isReturnDefaultValues = true
